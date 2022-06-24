@@ -1,5 +1,6 @@
 package com.ctrlya.tictactoe.core.party
 
+import android.util.Log
 import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.Battlefield

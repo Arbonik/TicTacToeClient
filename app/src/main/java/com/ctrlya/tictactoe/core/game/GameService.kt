@@ -1,5 +1,6 @@
 package com.ctrlya.tictactoe.core.game
 
+import android.util.Log
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.party.BaseParty
@@ -39,11 +40,24 @@ open class GameService(
     }
 
     fun setPlayer(first: Player? = null, second: Player? = null, current: Player? = null) {
-        first?.let {
-            firstPlayer = it
+
+        first?.let { player ->
+            firstPlayer = player
+            coroutineScope.launch {
+                player.turn().collectLatest { point ->
+                    Log.d("FIELD_UPDATE", "1")
+                    playerTurn(player, point/*, player.mark*/)
+                }
+            }
         }
-        second?.let {
-            secondPlayer = it
+        second?.let { player ->
+            secondPlayer = player
+            coroutineScope.launch {
+                player.turn().collectLatest { point ->
+                    Log.d("FIELD_UPDATE", "2")
+                    playerTurn(player, point/*, player.mark*/)
+                }
+            }
         }
         current?.let { currentPlayer = it }
     }
@@ -56,7 +70,7 @@ open class GameService(
         }
     }
 
-    fun playerTurn(player: Player, position: Point) {
+    private fun playerTurn(player: Player, position: Point) {
         if (player == currentPlayer) {
             turn(position, player.mark)
             updateProgress(GameProgress.Turn(player, position))
