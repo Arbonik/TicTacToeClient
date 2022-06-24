@@ -1,4 +1,4 @@
-package com.ctrlya.tictactoe
+package com.ctrlya.tictactoe.core.player
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,7 +6,10 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import com.ctrlya.tictactoe.Game
 import com.ctrlya.tictactoe.canvas.*
+import com.ctrlya.tictactoe.core.data.Mark
+import com.ctrlya.tictactoe.core.data.Point
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -16,10 +19,12 @@ interface Player {
 
     suspend fun turn(point: Point): Flow<Point>
 
+    val mark : Mark
 }
 
 class RandomPlayer(
-    val area: Point
+    val area: Point,
+    override val mark: Mark
 ) : Player {
     override suspend fun connectToGame(game: Game) {
 
@@ -36,6 +41,7 @@ class RandomPlayer(
 class TicTacToePlayerView(
     context: Context,
     attributeSet: AttributeSet?,
+    override val mark: Mark,
     val scope: CoroutineScope
 ) :
     TicTacToeView(context, attributeSet), Player {
