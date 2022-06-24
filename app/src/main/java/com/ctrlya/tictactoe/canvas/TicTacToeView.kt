@@ -10,9 +10,9 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     GraphView(context, attributeSet) {
 
     private val markDrawer = CrossDrawer()
-    private var _field: Array<Array<Mark>> = arrayOf(arrayOf(Mark.EMPTY))
+    private var _field: Array<Array<Mark>> = arrayOf()
     protected var viewField: MutableList<MutableList<Drawn>> =
-        mutableListOf(mutableListOf(EmptyDrawer()))
+        mutableListOf()
 
     open val CELL_WIDTH = 270f
     open val CELL_HEIGHT = 270f
@@ -52,11 +52,13 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
             color = Color.BLACK
             strokeWidth = 10f
         }
-        for (i in 0.._field.size) {
-            canvas.drawLine(CELL_WIDTH * i, 0f, CELL_HEIGHT * i, _field[0].size * CELL_WIDTH, p)
-        }
-        for (i in 0.._field[0].size) {
-            canvas.drawLine(0f, CELL_HEIGHT * i, _field.size * CELL_WIDTH, CELL_HEIGHT * i, p)
+        if (_field.isNotEmpty()) {
+            for (i in 0.._field.size) {
+                canvas.drawLine(CELL_WIDTH * i, 0f, CELL_HEIGHT * i, _field[0].size * CELL_WIDTH, p)
+            }
+            for (i in 0.._field[0].size) {
+                canvas.drawLine(0f, CELL_HEIGHT * i, _field.size * CELL_WIDTH, CELL_HEIGHT * i, p)
+            }
         }
     }
 
@@ -80,18 +82,18 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     var clicked: (point: Point) -> Unit = {}
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        Log.d("canvasXXX", canvasX.toString())
-        Log.d("canvasXXX", canvasY.toString())
+//        Log.d("canvasXXX", canvasX.toString())
+//        Log.d("canvasXXX", canvasY.toString())
         val x = (event.x / scaleFactor - canvasX) / CELL_WIDTH
         val y = (event.y / scaleFactor - canvasY) / CELL_HEIGHT
-        Log.d("canvasXXX", x.toString())
-        Log.d("canvasXXX", y.toString())
+//        Log.d("canvasXXX", x.toString())
+//        Log.d("canvasXXX", y.toString())
 
         val point = Point(x.toInt(), y.toInt())
 
         clicked(point)
 
-        if (point.x <= 3 && point.y <= 3 && dragging.not()) {
+        if (point.x <= _field.size - 1 && point.y <= _field[0].size - 1 && dragging.not()) {
             addToField(point.x, point.y, Mark.X)
         }
         invalidate()
