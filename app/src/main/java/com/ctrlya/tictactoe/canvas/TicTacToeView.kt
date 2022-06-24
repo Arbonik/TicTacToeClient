@@ -6,16 +6,16 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 
-class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
+open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     GraphView(context, attributeSet) {
 
     private val markDrawer = CrossDrawer()
     private var _field: Array<Array<Mark>> = arrayOf(arrayOf(Mark.EMPTY))
-    private var viewField: MutableList<MutableList<Drawn>> =
+    protected var viewField: MutableList<MutableList<Drawn>> =
         mutableListOf(mutableListOf(EmptyDrawer()))
 
-    val CELL_WIDTH = 270f
-    val CELL_HEIGHT = 270f
+    open val CELL_WIDTH = 270f
+    open val CELL_HEIGHT = 270f
 
 
     private fun collect() {
@@ -45,7 +45,7 @@ class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
         collect()
     }
 
-    private fun drawField(canvas: Canvas) {
+    protected fun drawField(canvas: Canvas) {
 //        Log.d("AAA", "width - ${canvas.width}")
 //        Log.d("AAA", "height - ${canvas.height}")
         val p = Paint().apply {
@@ -89,13 +89,9 @@ class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
 
         val point = Point(x.toInt(), y.toInt())
 
-
         clicked(point)
 
         if (point.x <= 3 && point.y <= 3 && dragging.not()) {
-            while (dragging){
-
-            }
             addToField(point.x, point.y, Mark.X)
         }
         invalidate()
