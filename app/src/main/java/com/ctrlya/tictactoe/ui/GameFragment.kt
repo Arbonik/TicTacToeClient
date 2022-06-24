@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.ctrlya.tictactoe.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GameFragment : Fragment() {
+open class GameFragment : Fragment() {
 
     private val viewModel: GameViewModel by viewModel<GameViewModel>()
 
@@ -16,6 +16,7 @@ class GameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel.createRoom()
         return inflater.inflate(R.layout.game_fragment, container, false)
     }
 }
