@@ -4,6 +4,7 @@ import android.util.Log
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.party.BaseParty
+import com.ctrlya.tictactoe.core.party.TurnStatus
 import com.ctrlya.tictactoe.core.player.Player
 import domain.game.GameStartedStatus
 
@@ -72,10 +73,11 @@ open class GameService(
 
     private fun playerTurn(player: Player, position: Point) {
         if (player == currentPlayer) {
-            turn(position, player.mark)
-            updateProgress(GameProgress.Turn(player, position))
-            fixedResultGame(position, player)
-            swapCurrentPlayer()
+            if (turn(position, player.mark) == TurnStatus.SUCCESS) {
+                updateProgress(GameProgress.Turn(player, position))
+                fixedResultGame(position, player)
+                swapCurrentPlayer()
+            }
         }
     }
 

@@ -19,10 +19,13 @@ open class BaseParty(settings: BattlefieldSettings) : Battlefield(
         return TurnValidator.validate(position, _marks)
     }
 
-    fun turn(position: Point, mark: Mark) {
-        if (isLegalTurn(position) == TurnStatus.SUCCESS) {
+    fun turn(position: Point, mark: Mark) : TurnStatus {
+        val isLegal = isLegalTurn(position)
+        if (isLegal == TurnStatus.SUCCESS) {
             addMark(position, mark)
             _battlefieldStateFlow.value = marks
+            TurnStatus.SUCCESS
         }
+        return isLegal
     }
 }
