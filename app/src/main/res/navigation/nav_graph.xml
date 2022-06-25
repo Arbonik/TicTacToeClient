@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/connectGameFragment">
+    app:startDestination="@id/mainFragment">
     <fragment
         android:id="@+id/connectGameFragment"
         android:name="com.ctrlya.tictactoe.ui.network.ConnectGameFragment"
@@ -36,6 +36,53 @@
         android:name="com.ctrlya.tictactoe.ui.game.CreateRoomFragment"
         android:label="create_room_fragment"
         tools:layout="@layout/fragment_create_room" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.ctrlya.tictactoe.ui.menu.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_chooseNetworkGameFragment"
+            app:destination="@id/chooseNetworkGameFragment2" />
+        <action
+            android:id="@+id/action_mainFragment_to_chooseLocalGameFragment"
+            app:destination="@id/chooseLocalGameFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_acquaintedYouFragment"
+            app:destination="@id/acquaintedYouFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseLocalGameFragment"
+        android:name="com.ctrlya.tictactoe.ui.menu.ChooseLocalGameFragment"
+        android:label="fragment_choose_local_game"
+        tools:layout="@layout/fragment_choose_local_game" />
+    <fragment
+        android:id="@+id/chooseNetworkGameFragment2"
+        android:name="com.ctrlya.tictactoe.ui.menu.ChooseNetworkGameFragment"
+        android:label="fragment_choose_network_game"
+        tools:layout="@layout/fragment_choose_network_game" />
+    <fragment
+        android:id="@+id/acquaintedYouFragment"
+        android:name="com.ctrlya.tictactoe.ui.AcquaintedYouFragment"
+        android:label="fragment_acquainted_you"
+        tools:layout="@layout/fragment_acquainted_you" >
+        <action
+            android:id="@+id/action_acquaintedYouFragment_to_acquaintedXObotFragment"
+            app:destination="@id/acquaintedXObotFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/acquaintedXObotFragment"
+        android:name="com.ctrlya.tictactoe.ui.AcquaintedXObotFragment"
+        android:label="fragment_acquainted_x_obot"
+        tools:layout="@layout/fragment_acquainted_x_obot" >
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_acquaintedXObotFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment" />
+    </fragment>
 
 
 </navigation>
