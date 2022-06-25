@@ -1,32 +1,51 @@
 package com.ctrlya.tictactoe.network
 
+import android.content.Context
+import android.graphics.Canvas
+import android.util.AttributeSet
+import com.ctrlya.tictactoe.canvas.TicTacToeView
+import com.ctrlya.tictactoe.core.data.Point
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.websocket.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
-import kotlinx.serialization.json.Json.Default.encodeToJsonElement
-
 
 interface CtrlProtocol {
-    suspend fun chat(message : String)
-    suspend fun event(event : GameStatus)
+    suspend fun point(point: Point)
+    suspend fun chat(message: String)
+    suspend fun event(event: GameStatus)
 }
 
-suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol){
+suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol) {
+
     val json = Json.parseToJsonElement(message.readText())
     val messageTypeString = json.jsonObject["type"].toString().trim('"')
     val dataJson = json.jsonObject["data"]!!
 
-    when (messageTypeString){
-        Int::class.simpleName ->{
+    when (messageTypeString) {
+        String::class.simpleName -> {
             ctrlProtocol.chat(Json.decodeFromJsonElement<String>(dataJson))
+        }
+        Point::class.simpleName -> {
+            ctrlProtocol.point(Json.decodeFromJsonElement<Point>(dataJson))
+        }
+        GameStatus::class.simpleName -> {
+            ctrlProtocol.event(Json.decodeFromJsonElement<GameStatus>(dataJson))
         }
     }
 }
 
-
-inline fun<reified T> sendCtrlProtocol(data: T) = buildJsonObject {
+inline fun<reified T> sendCtrlProtocol(data: T) = Json.encodeToString(buildJsonObject {
     put("type", data!!::class.simpleName)
     put("data", Json.encodeToJsonElement<T>(data))
-}.toString()
+})
 
 enum class Choose {
     Rock,

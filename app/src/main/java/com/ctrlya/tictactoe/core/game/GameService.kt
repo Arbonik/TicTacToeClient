@@ -11,6 +11,7 @@ import domain.game.GameStartedStatus
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
+
 // TODO need id to game
 open class GameService(
     settings: BattlefieldSettings,
@@ -86,8 +87,17 @@ open class GameService(
     private fun fixedResultGame(position: Point, player: Player) {
         if (judge.isWin(settings.winSequenceLength, position, _marks)) {
             updateProgress(GameEvent.Win(player))
-        }else if (judge.isDraw(_marks)) {
+            cancelScope()
+        } else if (judge.isDraw(_marks)) {
             updateProgress(GameEvent.DRAW)
+            cancelScope()
+        }
+    }
+
+    private fun cancelScope() {
+        coroutineScope.launch {
+            delay(50)
+            coroutineScope.cancel()
         }
     }
 

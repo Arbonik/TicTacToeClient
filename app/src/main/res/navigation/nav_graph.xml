@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/learnFragment">
+    app:startDestination="@id/gameFragment">
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.ctrlya.tictactoe.ui.game.GameFragment"
@@ -36,4 +36,9 @@
             android:id="@+id/action_learnFragment_self"
             app:destination="@id/learnFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/botGameFragment"
+        android:name="com.ctrlya.tictactoe.ui.game.BotGameFragment"
+        android:label="fragment_bot_game"
+        tools:layout="@layout/fragment_bot_game" />
 </navigation>
