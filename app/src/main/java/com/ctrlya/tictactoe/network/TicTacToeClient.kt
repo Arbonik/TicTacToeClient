@@ -14,7 +14,8 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 
 class TicTacToeClient : KtorClient() {
-    private val BASE_URL = URLBuilder(host = "89.223.123.239", port = 8888, pathSegments = listOf("rooms")).build()
+    private val BASE_URL =
+        URLBuilder(host = "89.223.123.239", port = 8888, pathSegments = listOf("rooms")).build()
     private val BASE_URL_Connect = URLBuilder(host = "89.223.123.239", port = 8888)
 
     suspend fun createRoom() = on<CreateRoomResponse> {
@@ -28,8 +29,8 @@ class TicTacToeClient : KtorClient() {
     suspend fun connectToGame(id: String, networkPlayer: NetworkPlayer) {
         client.webSocket(BASE_URL_Connect.appendPathSegments(id).buildString()) {
             launch {
-                networkPlayer.outgoingChannel.consumeEach {event ->
-                    when (event){
+                networkPlayer.outgoingChannel.consumeEach { event ->
+                    when (event) {
                         GameEvent.CREATED -> {}
                         GameEvent.DRAW -> {}
                         GameEvent.END -> {}
