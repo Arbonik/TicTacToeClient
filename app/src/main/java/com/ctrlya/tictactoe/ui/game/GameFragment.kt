@@ -19,7 +19,7 @@ open class GameFragment : Fragment() {
     private val viewModel: GameViewModel by viewModel<GameViewModel>()
     val player = RealPlayer(Mark.X, lifecycleScope)
     val player1 = RealPlayer(Mark.O, lifecycleScope)
-    val game = GameService(BattlefieldSettings(10,12,5,false), lifecycleScope)
+    val game = GameService(BattlefieldSettings(10,10,5,false), lifecycleScope)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
