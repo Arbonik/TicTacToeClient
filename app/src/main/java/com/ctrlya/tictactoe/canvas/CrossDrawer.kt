@@ -19,7 +19,7 @@ class CrossDrawer : Drawn() {
 
     override fun draw(canvas: Canvas) {
 
-        animationTime = 10_00
+        animationTime = 6_00
 
         val p = Paint().apply {
             color = Color.BLUE

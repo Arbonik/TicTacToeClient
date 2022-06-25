@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 open class BaseParty(settings: BattlefieldSettings) : Battlefield(
     settings
 ) {
-    private val _battlefieldStateFlow: MutableStateFlow<List<List<Mark>>> = MutableStateFlow(listOf(listOf<Mark>()))
+    private val _battlefieldStateFlow: MutableStateFlow<List<List<Mark>>> = MutableStateFlow(listOf(listOf<Mark>())).apply { value = marks }
     val battlefieldStateFlow: StateFlow<List<List<Mark>>> = _battlefieldStateFlow
 
     private fun isLegalTurn(position: Point): TurnStatus {

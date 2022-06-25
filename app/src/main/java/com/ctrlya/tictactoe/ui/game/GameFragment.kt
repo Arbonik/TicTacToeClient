@@ -11,14 +11,15 @@ import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.core.player.RealPlayer
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class GameFragment : Fragment() {
 
     private val viewModel: GameViewModel by viewModel<GameViewModel>()
-    val player = RealPlayer(Mark.O, lifecycleScope)
-    val player1 = RealPlayer(Mark.X, lifecycleScope)
-    val game = GameService(BattlefieldSettings(3,3,3,false), lifecycleScope)
+    val player = RealPlayer(Mark.X, lifecycleScope)
+    val player1 = RealPlayer(Mark.O, lifecycleScope)
+    val game = GameService(BattlefieldSettings(10,12,5,false), lifecycleScope)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

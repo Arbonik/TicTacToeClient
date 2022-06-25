@@ -20,7 +20,7 @@ class ZeroDrawer : Drawn() {
 
     override fun draw(canvas: Canvas) {
 
-        animationTime = 20_00
+        animationTime = 12_00
 
         val p = Paint().apply {
             color = Color.BLUE

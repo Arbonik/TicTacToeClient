@@ -22,6 +22,7 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
 
     open val CELL_WIDTH = 270f
     open val CELL_HEIGHT = 270f
+    var f = false
 
 
     private fun collect() {
@@ -91,13 +92,18 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
         val x = (event.x / scaleFactor - canvasX) / CELL_WIDTH
         val y = (event.y / scaleFactor - canvasY) / CELL_HEIGHT
         val point = Point(y.toInt(), x.toInt())
-
+        if (event.action == MotionEvent.ACTION_MOVE) {
+            f = true
+        }
         if (event.action == MotionEvent.ACTION_UP) {
-            MainScope().launch {
-                clicked.emit(point)
+            if (f) {
+                f = false
+            } else {
+                MainScope().launch {
+                    clicked.emit(point)
+                }
             }
         }
-        invalidate()
 
         return super.onTouchEvent(event)
     }
