@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.0'
 }
 
 android {
@@ -35,22 +36,28 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
-    def nav_version = "2.3.5"
 
-    def ktor_version = "2.0.2"
     def koin_version = "3.2.0"
 
+    //coroutine
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
+
     //KTOR
-    implementation "io.ktor:ktor-client-cio:$ktor_version"
+    def ktor_version= "2.0.2"
+    implementation "io.ktor:ktor-client-logging:$ktor_version"
+    implementation "org.slf4j:slf4j-simple:1.7.36"
+    implementation 'io.ktor:ktor-client-content-negotiation:2.0.2'
+    implementation "io.ktor:ktor-serialization-kotlinx-json:$ktor_version"
     implementation "io.ktor:ktor-client-websockets:$ktor_version"
-    implementation "io.ktor:ktor-client-serialization:$ktor_version"
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation "io.ktor:ktor-client-cio:$ktor_version"
 
     //KOIN
     implementation "io.insert-koin:koin-android:$koin_version"
-    implementation "io.insert-koin:koin-ktor:$koin_version"
-
 
     //navigation
+    def nav_version = "2.4.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
