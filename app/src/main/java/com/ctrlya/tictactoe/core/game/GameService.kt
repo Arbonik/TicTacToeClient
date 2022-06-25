@@ -1,6 +1,7 @@
 package com.ctrlya.tictactoe.core.game
 
 import android.util.Log
+import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.party.BaseParty
@@ -19,6 +20,7 @@ open class GameService(
     settings
 ) {
     private val _gameStatusFlow: MutableSharedFlow<GameEvent> = MutableStateFlow(GameEvent.CREATED)
+    val _gameWinLine: MutableStateFlow<WinLine?> = MutableStateFlow(null)
     val gameStatusFlow = _gameStatusFlow.asSharedFlow()
 
     private val judge = Judge()
@@ -36,7 +38,9 @@ open class GameService(
             firstPlayer == null -> GameStartedStatus.NO_FIRST_PLAYER
             secondPlayer == null -> GameStartedStatus.NO_SECOND_PLAYER
             currentPlayer == null -> GameStartedStatus.NO_CURRENT_PLAYERS
-            else -> { GameStartedStatus.SUCCESS }
+            else -> {
+                GameStartedStatus.SUCCESS
+            }
         }
     }
 
@@ -83,10 +87,16 @@ open class GameService(
 
     private fun fixedResultGame(position: Point, player: Player) {
         if (judge.isWin(settings.winSequenceLength, position, _marks)) {
+            _marks
             updateProgress(GameEvent.Win(player))
-        }else if (judge.isDraw(_marks)) {
+        } else if (judge.isDraw(_marks)) {
             updateProgress(GameEvent.DRAW)
         }
+    }
+
+    fun searchWinLine(marks: List<List<Mark>>, position: Point) {
+        settings.winSequenceLength
+
     }
 
     private fun swapCurrentPlayer() {
@@ -102,7 +112,7 @@ open class GameService(
         updateProgress(GameEvent.END)
     }
 
-    private fun updateProgress(gameEvent : GameEvent) {
+    private fun updateProgress(gameEvent: GameEvent) {
         coroutineScope.launch {
             _gameStatusFlow.emit(gameEvent)
         }
