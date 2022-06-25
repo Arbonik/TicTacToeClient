@@ -28,14 +28,18 @@ class NetworkPlayer(
         game.gameStatusFlow.collectLatest { game ->
             when (game){
                 GameEvent.CREATED -> {}
-                GameEvent.DRAW -> {}
+                GameEvent.DRAW -> {
+
+                }
                 GameEvent.END -> {}
                 GameEvent.INIT -> {}
                 is GameEvent.Start -> {}
                 is GameEvent.Turn -> {
                     turns.emit(game.point)
                 }
-                is GameEvent.Win -> {}
+                is GameEvent.Win -> {
+
+                }
             }
         }
     }

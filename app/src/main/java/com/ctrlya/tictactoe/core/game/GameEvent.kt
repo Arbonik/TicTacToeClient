@@ -6,6 +6,7 @@ import com.ctrlya.tictactoe.core.player.Player
 sealed class GameEvent {
     /*When game created*/
     object CREATED : GameEvent()
+    data class Message(val message : String) : GameEvent()
     /*When players connected to game*/
     object INIT : GameEvent()
     /*When player must do first turn*/

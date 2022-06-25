@@ -104,6 +104,10 @@ open class GameService(
         updateProgress(GameEvent.END)
     }
 
+    fun sendMessage(message : String){
+        updateProgress(GameEvent.Message(message))
+    }
+
     private fun updateProgress(gameEvent : GameEvent) {
         coroutineScope.launch {
             _gameStatusFlow.emit(gameEvent)

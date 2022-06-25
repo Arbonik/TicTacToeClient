@@ -1,9 +1,15 @@
 package com.ctrlya.tictactoe
 
 import android.app.Application
+import androidx.room.Room
+import com.ctrlya.tictactoe.database.TicTacToeDatabase
+import com.ctrlya.tictactoe.database.memory.MemoryDao
+import com.ctrlya.tictactoe.database.memory.MemoryInteractor
+import com.ctrlya.tictactoe.database.memory.MemoryRepository
 import com.ctrlya.tictactoe.network.NetworkGameInteractor
 import com.ctrlya.tictactoe.network.TicTacToeClient
 import com.ctrlya.tictactoe.ui.game.GameViewModel
+import com.ctrlya.tictactoe.ui.learn.LearnViewModel
 import com.ctrlya.tictactoe.ui.network.ConnectGameViewModel
 import com.ctrlya.tictactoe.ui.network.NetworkGameViewModel
 import org.koin.android.ext.koin.androidContext
@@ -18,15 +24,27 @@ class TicTacToeApplication : Application() {
         factory { TicTacToeClient() }
         factory { NetworkGameInteractor(get()) }
 
-        viewModel<GameViewModel>{ GameViewModel(get()) }
-        viewModel<ConnectGameViewModel>{ ConnectGameViewModel(get()) }
-        viewModel<NetworkGameViewModel>{ NetworkGameViewModel(get(),get()) }
+        single {
+            Room.databaseBuilder(
+                androidContext(),
+                TicTacToeDatabase::class.java,
+                "TicTacToeDatamase"
+            ).build()
+        }
+        single { get<TicTacToeDatabase>().memoryDao() }
+        single { MemoryRepository(get()) }
+        single { MemoryInteractor(get()) }
+
+        viewModel<GameViewModel> { GameViewModel(get()) }
+        viewModel<ConnectGameViewModel> { ConnectGameViewModel(get()) }
+        viewModel<NetworkGameViewModel> { NetworkGameViewModel(get(), get()) }
+        viewModel<LearnViewModel> { LearnViewModel(get()) }
     }
 
     override fun onCreate() {
         super.onCreate()
         // Start Koin
-        startKoin{
+        startKoin {
             androidLogger()
             androidContext(this@TicTacToeApplication)
             modules(appModule)

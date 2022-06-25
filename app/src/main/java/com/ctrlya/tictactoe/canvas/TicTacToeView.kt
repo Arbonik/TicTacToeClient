@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     GraphView(context, attributeSet) {
 
-    private var _field: List<List<Mark>> = listOf()
+    private var _field: List<List<Mark>> = listOf(listOf<Mark>(Mark.EMPTY))
     protected var viewField: MutableList<MutableList<Drawn>> =
         mutableListOf()
 
@@ -45,11 +45,12 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
         Mark.X -> CrossDrawer()
         Mark.O -> ZeroDrawer()
     }
-
+    /*
+        подписка на обновляемое поле
+     */
     suspend fun setField(fieldState: StateFlow<List<List<Mark>>>) {
         fieldState.collectLatest { field ->
             _field = field
-            Log.d("FIELD_UPDATE", "FIELD_UPDATE")
             collect()
             invalidate()
         }
