@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.ctrlya.tictactoe.R
 import com.ctrlya.tictactoe.databinding.ConnectGameFragmentBinding
@@ -17,29 +16,35 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
 
     private val viewModel: ConnectGameViewModel by viewModel()
-    private lateinit var bindind: ConnectGameFragmentBinding
+    private lateinit var binding: ConnectGameFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.loadRooms()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
-        bindind = ConnectGameFragmentBinding.bind(view)
+        binding = ConnectGameFragmentBinding.bind(view)
         roomsCollect()
         newRoomCreateListener()
         refreshLayoutListener()
     }
 
     private fun refreshLayoutListener() {
-        bindind.swipeRefrest.setOnRefreshListener {
+
+        binding.swipeRefrest.setOnRefreshListener {
             viewModel.loadRooms()
         }
     }
 
     private fun newRoomCreateListener() {
-        bindind.createRoomsFab.setOnClickListener {
+        binding.createRoomsFab.setOnClickListener {
+
+            findNavController().navigate(
+                R.id.action_connectGameFragment_to_createRoomFragment
+            )
 //            viewModel.createRoom {
 //                viewModel.loadRooms()
 //                findNavController().navigate(
@@ -54,30 +59,30 @@ class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
             viewModel.rooms.collectLatest {
                 when (it) {
                     is Resource.Error -> {
-                        bindind.swipeRefrest.isRefreshing = false
+                        binding.swipeRefrest.isRefreshing = false
                     }
                     is Resource.Loading -> {
-                        bindind.swipeRefrest.isRefreshing = true
+                        binding.swipeRefrest.isRefreshing = true
                     }
                     is Resource.Success -> {
-                        bindind.swipeRefrest.isRefreshing = false
+                        binding.swipeRefrest.isRefreshing = false
                         //TODO NO ERROR VALIDATION ADD PLEASE
                         if (it.data?.items?.isNotEmpty() == true) {
-                            bindind.noFreeRoomsHit.visibility = View.GONE
-                            bindind.roomsListView.adapter =
+                            binding.noFreeRoomsHit.visibility = View.GONE
+                            binding.roomsListView.adapter =
                                 ArrayAdapter(
                                     requireContext(),
                                     android.R.layout.simple_list_item_1,
                                     it.data.items
                                 )
-                            bindind.roomsListView.setOnItemClickListener { parent, view, position, id ->
+                            binding.roomsListView.setOnItemClickListener { parent, view, position, id ->
                                 findNavController().navigate(
                                     R.id.action_connectGameFragment_to_networkGameFragment,
                                     bundleOf("id" to it.data.items[position].id)
                                 )
                             }
                         } else {
-                            bindind.noFreeRoomsHit.visibility = View.VISIBLE
+                            binding.noFreeRoomsHit.visibility = View.VISIBLE
                         }
                     }
                 }

@@ -8,9 +8,5 @@ import kotlinx.coroutines.launch
 class GameViewModel(
     val networkGameInteractor: NetworkGameInteractor
 ) : ViewModel() {
-    fun createRoom(){
-        viewModelScope.launch {
-            networkGameInteractor.createRoom()
-        }
-    }
+
 }

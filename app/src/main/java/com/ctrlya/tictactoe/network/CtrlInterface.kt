@@ -1,6 +1,8 @@
 package com.ctrlya.tictactoe.network
 
+import com.ctrlya.tictactoe.core.data.Point
 import io.ktor.websocket.*
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 import kotlinx.serialization.json.Json.Default.encodeToJsonElement
 
@@ -8,6 +10,7 @@ import kotlinx.serialization.json.Json.Default.encodeToJsonElement
 interface CtrlProtocol {
     suspend fun chat(message : String)
     suspend fun event(event : GameStatus)
+    suspend fun point(point: Point)
 }
 
 suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol){
@@ -16,8 +19,8 @@ suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol){
     val dataJson = json.jsonObject["data"]!!
 
     when (messageTypeString){
-        Int::class.simpleName ->{
-            ctrlProtocol.chat(Json.decodeFromJsonElement<String>(dataJson))
+        Point::class.simpleName ->{
+            ctrlProtocol.point(Json.decodeFromJsonElement<Point>(dataJson))
         }
     }
 }

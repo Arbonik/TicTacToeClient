@@ -5,11 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/connectGameFragment">
     <fragment
-        android:id="@+id/gameFragment"
-        android:name="com.ctrlya.tictactoe.ui.game.GameFragment"
-        android:label="game_fragment"
-        tools:layout="@layout/game_fragment" />
-    <fragment
         android:id="@+id/connectGameFragment"
         android:name="com.ctrlya.tictactoe.ui.network.ConnectGameFragment"
         android:label="connect_game_fragment"
@@ -17,6 +12,9 @@
         <action
             android:id="@+id/action_connectGameFragment_to_networkGameFragment"
             app:destination="@id/networkGameFragment" />
+        <action
+            android:id="@+id/action_connectGameFragment_to_createRoomFragment"
+            app:destination="@id/createRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/networkGameFragment"
@@ -27,4 +25,17 @@
             android:name="id"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.ctrlya.tictactoe.ui.game.GameFragment"
+        android:label="game_fragment"
+        tools:layout="@layout/game_fragment" />
+
+    <fragment
+        android:id="@+id/createRoomFragment"
+        android:name="com.ctrlya.tictactoe.ui.game.CreateRoomFragment"
+        android:label="create_room_fragment"
+        tools:layout="@layout/fragment_create_room" />
+
+
 </navigation>

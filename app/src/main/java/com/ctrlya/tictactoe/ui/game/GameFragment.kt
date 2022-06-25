@@ -13,16 +13,17 @@ import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.core.player.RealPlayer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-open class GameFragment : Fragment() {
+open class GameFragment : Fragment()
+{
 
     private val viewModel: GameViewModel by viewModel<GameViewModel>()
+
     val player = RealPlayer(Mark.X, lifecycleScope)
     val player1 = RealPlayer(Mark.O, lifecycleScope)
+
     val game = GameService(BattlefieldSettings(3,3,3,false), lifecycleScope)
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 //        viewModel.createRoom()
         val view = TicTacToeView(requireContext(), null) //inflater.inflate(R.layout.game_fragment, container, false)
         game.setPlayer(

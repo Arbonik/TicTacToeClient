@@ -1,25 +1,46 @@
 package com.ctrlya.tictactoe.network
 
-import com.ctrlya.tictactoe.core.data.Point
+import android.util.Log
+import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.player.NetworkPlayer
 import com.ctrlya.tictactoe.network.model.CreateRoomResponse
 import com.ctrlya.tictactoe.network.model.RoomsResponse
+import io.ktor.client.call.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.channels.consume
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class TicTacToeClient : KtorClient() {
     private val BASE_URL = URLBuilder(host = "89.223.123.239", port = 8888, pathSegments = listOf("rooms")).build()
+    private val CREATE_ROOM_URL = URLBuilder(host = "89.223.123.239", port = 8888, pathSegments = listOf("rooms/create")).build()
     private val BASE_URL_Connect = URLBuilder(host = "89.223.123.239", port = 8888)
 
-    suspend fun createRoom() = on<CreateRoomResponse> {
-        client.post(BASE_URL)
-    }
+    suspend fun createRoom(gameSettings: BattlefieldSettings): CreateRoomResponse? =
+        try {
+            client.post(CREATE_ROOM_URL)
+            {
+                setBody(
+                    Json.encodeToString(gameSettings)
+                )
+            }
+                .body<CreateRoomResponse?>()?.let {
+                    Log.d("NETWORK_REQUEST", "SUCCESS")
+                    it
+                }
+            Log.d("NETWORK_REQUEST", "NULL")
+            null
+        }
+        catch (error: Error)
+        {
+            Log.d("NETWORK_REQUEST", error.message.toString())
+            null
+        }
 
     suspend fun allRooms() = on<RoomsResponse> {
         client.get(BASE_URL)

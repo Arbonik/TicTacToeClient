@@ -49,4 +49,8 @@ class NetworkPlayer(
     override suspend fun event(event: GameStatus) {
 
     }
+
+    override suspend fun point(point: Point) {
+
+    }
 }
