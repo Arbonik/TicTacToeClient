@@ -18,7 +18,7 @@ open class GameService(
 ) : BaseParty(
     settings
 ) {
-    private val _gameStatusFlow: MutableSharedFlow<GameProgress> = MutableStateFlow(GameProgress.CREATED)
+    private val _gameStatusFlow: MutableSharedFlow<GameEvent> = MutableStateFlow(GameEvent.CREATED)
     val gameStatusFlow = _gameStatusFlow.asSharedFlow()
 
     private val judge = Judge()
@@ -66,7 +66,7 @@ open class GameService(
     fun start() {
         if (isCanStarted() == GameStartedStatus.SUCCESS) {
             updateProgress(
-                GameProgress.Start(currentPlayer!!)
+                GameEvent.Start(currentPlayer!!)
             )
         }
     }
@@ -74,7 +74,7 @@ open class GameService(
     private fun playerTurn(player: Player, position: Point) {
         if (player == currentPlayer) {
             if (turn(position, player.mark) == TurnStatus.SUCCESS) {
-                updateProgress(GameProgress.Turn(player, position))
+                updateProgress(GameEvent.Turn(player, position))
                 fixedResultGame(position, player)
                 swapCurrentPlayer()
             }
@@ -83,9 +83,9 @@ open class GameService(
 
     private fun fixedResultGame(position: Point, player: Player) {
         if (judge.isWin(settings.winSequenceLength, position, _marks)) {
-            updateProgress(GameProgress.Win(player))
+            updateProgress(GameEvent.Win(player))
         }else if (judge.isDraw(_marks)) {
-            updateProgress(GameProgress.DRAW)
+            updateProgress(GameEvent.DRAW)
         }
     }
 
@@ -99,12 +99,12 @@ open class GameService(
     fun end() {
         //FIXME CAN CANCEL ALL CHILDREN, MORE ONE GAME
         coroutineScope.cancel()
-        updateProgress(GameProgress.END)
+        updateProgress(GameEvent.END)
     }
 
-    private fun updateProgress(gameProgress : GameProgress) {
+    private fun updateProgress(gameEvent : GameEvent) {
         coroutineScope.launch {
-            _gameStatusFlow.emit(gameProgress)
+            _gameStatusFlow.emit(gameEvent)
         }
     }
 }

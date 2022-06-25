@@ -1,4 +1,4 @@
-package com.ctrlya.tictactoe.ui
+package com.ctrlya.tictactoe.ui.game
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

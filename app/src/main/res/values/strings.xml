@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TicTacToeClient</string>
+    <string name="no_free_rooms">Нет свободных комнат</string>
 </resources>

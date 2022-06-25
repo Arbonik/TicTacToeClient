@@ -2,7 +2,7 @@ package com.ctrlya.tictactoe.core.player
 
 import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.data.Point
-import com.ctrlya.tictactoe.core.game.GameProgress
+import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.game.GameService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -15,21 +15,21 @@ open class ConsolePlayer(
     suspend fun connectToGameStatus(gameService: GameService) {
         gameService.gameStatusFlow.collect {
             when (it) {
-                GameProgress.CREATED -> {}
-                GameProgress.DRAW -> {}
-                GameProgress.END -> {}
-                GameProgress.INIT -> {}
-                is GameProgress.Start -> {
+                GameEvent.CREATED -> {}
+                GameEvent.DRAW -> {}
+                GameEvent.END -> {}
+                GameEvent.INIT -> {}
+                is GameEvent.Start -> {
                     if (it.firstTurn == this) {
 //                        gameService.playerTurn(this)
                     }
                 }
-                is GameProgress.Turn -> {
+                is GameEvent.Turn -> {
                     if (it.player != this) {
 //                        gameService.playerTurn(this)
                     }
                 }
-                is GameProgress.Win -> {}
+                is GameEvent.Win -> {}
             }
         }
     }

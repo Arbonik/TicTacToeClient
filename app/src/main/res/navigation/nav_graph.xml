@@ -3,10 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/gameFragment">
+    app:startDestination="@id/connectGameFragment">
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.ctrlya.tictactoe.ui.GameFragment"
+        android:name="com.ctrlya.tictactoe.ui.game.GameFragment"
         android:label="game_fragment"
         tools:layout="@layout/game_fragment" />
+    <fragment
+        android:id="@+id/connectGameFragment"
+        android:name="com.ctrlya.tictactoe.ui.network.ConnectGameFragment"
+        android:label="connect_game_fragment"
+        tools:layout="@layout/connect_game_fragment" />
 </navigation>

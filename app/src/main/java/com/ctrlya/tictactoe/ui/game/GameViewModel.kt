@@ -1,4 +1,4 @@
-package com.ctrlya.tictactoe.ui
+package com.ctrlya.tictactoe.ui.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ class GameViewModel(
 ) : ViewModel() {
     fun createRoom(){
         viewModelScope.launch {
-            networkGameInteractor.a()
+            networkGameInteractor.createRoom()
         }
     }
 }
