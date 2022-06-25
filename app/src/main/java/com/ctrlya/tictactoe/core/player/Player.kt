@@ -12,19 +12,3 @@ interface Player {
 
     val mark : Mark
 }
-
-class RandomPlayer(
-    val area: Point,
-    override val mark: Mark
-) : Player {
-    override suspend fun connectToGame(game: GameService) {
-
-    }
-
-    override suspend fun turn(): Flow<Point> = flow {
-        repeat(100) {
-            emit(Point(area.x.rangeTo(0).random(), area.y.rangeTo(0).random()))
-        }
-    }
-
-}

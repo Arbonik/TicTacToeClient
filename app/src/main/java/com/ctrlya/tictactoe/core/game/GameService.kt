@@ -1,6 +1,7 @@
 package com.ctrlya.tictactoe.core.game
 
 import android.util.Log
+import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.party.BaseParty
@@ -10,12 +11,14 @@ import domain.game.GameStartedStatus
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 
 // TODO need id to game
 open class GameService(
     settings: BattlefieldSettings,
-    private val coroutineScope: CoroutineScope
+    protected val coroutineScope: CoroutineScope
 ) : BaseParty(
     settings
 ) {
@@ -24,12 +27,12 @@ open class GameService(
 
     private val judge = Judge()
 
-    var firstPlayer: Player? = null
-        private set
-    var secondPlayer: Player? = null
-        private set
-    var currentPlayer: Player? = null
-        private set
+    open var firstPlayer: Player? = null
+        protected set
+    open var secondPlayer: Player? = null
+        protected set
+    open var currentPlayer: Player? = null
+        protected set
 
     fun isCanStarted(): GameStartedStatus {
         return when {
@@ -44,7 +47,6 @@ open class GameService(
     }
 
     fun setPlayer(first: Player? = null, second: Player? = null, current: Player? = null) {
-
         first?.let { player ->
             firstPlayer = player
             coroutineScope.launch {
@@ -66,7 +68,7 @@ open class GameService(
         current?.let { currentPlayer = it }
     }
 
-    fun start() {
+    open fun start() {
         if (isCanStarted() == GameStartedStatus.SUCCESS) {
             updateProgress(
                 GameEvent.Start(currentPlayer!!)
@@ -74,9 +76,9 @@ open class GameService(
         }
     }
 
-    private fun playerTurn(player: Player, position: Point) {
+    protected fun playerTurn(player: Player, position: Point, mark : Mark = player.mark) {
         if (player == currentPlayer) {
-            if (turn(position, player.mark) == TurnStatus.SUCCESS) {
+            if (turn(position, mark) == TurnStatus.SUCCESS) {
                 updateProgress(GameEvent.Turn(player, position))
                 fixedResultGame(position, player)
                 swapCurrentPlayer()
@@ -101,7 +103,7 @@ open class GameService(
         }
     }
 
-    private fun swapCurrentPlayer() {
+    protected fun swapCurrentPlayer() {
         currentPlayer = if (currentPlayer == firstPlayer)
             secondPlayer
         else
@@ -114,11 +116,11 @@ open class GameService(
         updateProgress(GameEvent.END)
     }
 
-    fun sendMessage(message : String){
+    fun sendMessage(message: String) {
         updateProgress(GameEvent.Message(message))
     }
 
-    private fun updateProgress(gameEvent : GameEvent) {
+    private fun updateProgress(gameEvent: GameEvent) {
         coroutineScope.launch {
             _gameStatusFlow.emit(gameEvent)
         }

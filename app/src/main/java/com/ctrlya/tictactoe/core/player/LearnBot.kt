@@ -20,8 +20,6 @@ class LearnBot(
     companion object {
         const val HOBOT = 10_000_000L
     }
-    // получение текущей позиции, каждый раз, когда противник ходит
-    private val positionSharedFlow: MutableStateFlow<Array<Array<Mark>>> = MutableStateFlow(arrayOf())
 
     // подписка на события игры
     override suspend fun connectToGame(game: GameService) {
@@ -33,26 +31,35 @@ class LearnBot(
                             it.toTypedArray()
                         }.toTypedArray()
 
-                        if (event.player != this) {
-                            positionSharedFlow.emit(array)
-                            if (isFamiliarPosition(game.battlefieldStateFlow.value.toHash())) {
-                                game.sendMessage("Я знаю этот ход!")
-                            } else {
-                                game.sendMessage("Я не знаю этот ход!")
-                                learn(event.point, array)
-                            }
+                        if (event.player != this@LearnBot) {
+//                            positionSharedFlow.emit(array)
+//                            if (isFamiliarPosition(game.battlefieldStateFlow.value.toHash())) {
+//                                game.sendMessage("Я знаю этот ход!")
+//                            } else {
+//                                game.sendMessage("Я не знаю этот ход!")
+//                                learn(event.point, array)
+//                            }
                         }
+                    }
+                    is GameEvent.Start -> {
+                        if (event.firstTurn == this@LearnBot) {
+                            game.sendMessage("Я начинаю!")
+//                            game.turn(turn(event.s))
+                        }
+                        else
+                            game.sendMessage("Ваш ход, гроссмейстер")
                     }
                 }
             }
         }
     }
 
-    override suspend fun turn(): Flow<Point> = positionSharedFlow.map {
-        turn(it)
+    override suspend fun turn(): Flow<Point> = flow {
+//        turn()
+        emit(Point())
     }
 
-    private var fastMemory: LinkedHashMap<String, Point> = linkedMapOf()
+    private var fastMemory: LinkedHashMap<String, Point> = linkedMapOf("100000000" to Point(1,1))
 
     suspend fun fastMemoryUpdate() {
         fastMemory = memoryInteractor.memorySnupshot(HOBOT)
@@ -93,16 +100,20 @@ class LearnBot(
 
     private fun randomPointFromEmptyPlaces(field: Array<Array<Mark>>): Point {
         val sequence = sequence {
-            for (y in field.indices) {
-                for (x in field[y].indices)
+            for (x in field.indices) {
+                for (y in field[x].indices)
                     if (field[y][x] == Mark.EMPTY)
-                        yield(Point(x, y))
+                        yield(Point(y, x))
             }
         }
         val turns = sequence.toList()
 
-        if (turns.isNotEmpty())
-            return turns.random()
-        else return Point()
+        if (turns.isNotEmpty()) {
+            val turn = turns.random()
+            Log.d("AAA", turn.toString())
+            return turn
+        } else {
+            return Point(5,5)
+        }
     }
 }

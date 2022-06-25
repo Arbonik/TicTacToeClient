@@ -1,6 +1,5 @@
 package com.ctrlya.tictactoe.core.player
 
-import android.util.Log
 import com.ctrlya.tictactoe.canvas.TicTacToeView
 import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.data.Point
@@ -13,11 +12,8 @@ class RealPlayer(override val mark: Mark, val playerScope : CoroutineScope) : Pl
     private val mutableSharedFlow: MutableSharedFlow<Point> = MutableSharedFlow()
 
     suspend fun connectToTouchListener(ticTacToeView: TicTacToeView) {
-        ticTacToeView.clicked.map { point ->
-            Log.d("POINT_REAL", Point(point.x, point.y).toString())
-           Point(point.x, point.y)
-        }.collectLatest { point ->
-            mutableSharedFlow.emit(point)
+        ticTacToeView.clicked.collectLatest { point ->
+            mutableSharedFlow.emit(Point(point.x, point.y))
         }
     }
 
