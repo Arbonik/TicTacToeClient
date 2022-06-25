@@ -4,6 +4,7 @@ import android.util.Log
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.party.BaseParty
+import com.ctrlya.tictactoe.core.party.TurnStatus
 import com.ctrlya.tictactoe.core.player.Player
 import domain.game.GameStartedStatus
 
@@ -17,8 +18,7 @@ open class GameService(
 ) : BaseParty(
     settings
 ) {
-    private val _gameStatusFlow: MutableSharedFlow<GameProgress> =
-        MutableStateFlow(GameProgress.CREATED)
+    private val _gameStatusFlow: MutableSharedFlow<GameEvent> = MutableStateFlow(GameEvent.CREATED)
     val gameStatusFlow = _gameStatusFlow.asSharedFlow()
 
     private val judge = Judge()
@@ -48,10 +48,8 @@ open class GameService(
             firstPlayer = player
             coroutineScope.launch {
                 player.turn().collectLatest { point ->
-                    if (point.x >= 0 && point.y >= 0 && point.x <= battlefieldStateFlow.value.size - 1 && point.y <= battlefieldStateFlow.value.size - 1) {
-                        Log.d("FIELD_UPDATE", "1")
-                        playerTurn(player, point/*, player.mark*/)
-                    }
+                    Log.d("FIELD_UPDATE", "1")
+                    playerTurn(player, point/*, player.mark*/)
                 }
             }
         }
@@ -59,11 +57,8 @@ open class GameService(
             secondPlayer = player
             coroutineScope.launch {
                 player.turn().collectLatest { point ->
-                    Log.d("AAA", battlefieldStateFlow.value.size.toString())
-                    if (point.x >= 0 && point.y >= 0 && point.x <= battlefieldStateFlow.value.size - 1 && point.y <= battlefieldStateFlow.value.size - 1) {
-                        Log.d("FIELD_UPDATE", "2")
-                        playerTurn(player, point/*, player.mark*/)
-                    }
+                    Log.d("FIELD_UPDATE", "2")
+                    playerTurn(player, point/*, player.mark*/)
                 }
             }
         }
@@ -73,25 +68,26 @@ open class GameService(
     fun start() {
         if (isCanStarted() == GameStartedStatus.SUCCESS) {
             updateProgress(
-                GameProgress.Start(currentPlayer!!)
+                GameEvent.Start(currentPlayer!!)
             )
         }
     }
 
     private fun playerTurn(player: Player, position: Point) {
         if (player == currentPlayer) {
-            turn(position, player.mark)
-            updateProgress(GameProgress.Turn(player, position))
-            fixedResultGame(position, player)
-            swapCurrentPlayer()
+            if (turn(position, player.mark) == TurnStatus.SUCCESS) {
+                updateProgress(GameEvent.Turn(player, position))
+                fixedResultGame(position, player)
+                swapCurrentPlayer()
+            }
         }
     }
 
     private fun fixedResultGame(position: Point, player: Player) {
         if (judge.isWin(settings.winSequenceLength, position, _marks)) {
-            updateProgress(GameProgress.Win(player))
-        } else if (judge.isDraw(_marks)) {
-            updateProgress(GameProgress.DRAW)
+            updateProgress(GameEvent.Win(player))
+        }else if (judge.isDraw(_marks)) {
+            updateProgress(GameEvent.DRAW)
         }
     }
 
@@ -105,12 +101,12 @@ open class GameService(
     fun end() {
         //FIXME CAN CANCEL ALL CHILDREN, MORE ONE GAME
         coroutineScope.cancel()
-        updateProgress(GameProgress.END)
+        updateProgress(GameEvent.END)
     }
 
-    private fun updateProgress(gameProgress: GameProgress) {
+    private fun updateProgress(gameEvent : GameEvent) {
         coroutineScope.launch {
-            _gameStatusFlow.emit(gameProgress)
+            _gameStatusFlow.emit(gameEvent)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.ctrlya.tictactoe.ui
+package com.ctrlya.tictactoe.ui.game
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -28,7 +28,7 @@ open class GameFragment : Fragment() {
         game.setPlayer(
             player,
             player1,
-            player1,
+            player,
         )
         lifecycleScope.launchWhenCreated {
             view.setField(game.battlefieldStateFlow)

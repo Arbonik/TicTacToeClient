@@ -1,11 +1,11 @@
 package com.ctrlya.tictactoe
 
 import android.app.Application
-import com.ctrlya.tictactoe.network.KtorClient
 import com.ctrlya.tictactoe.network.NetworkGameInteractor
 import com.ctrlya.tictactoe.network.TicTacToeClient
-import com.ctrlya.tictactoe.ui.GameViewModel
-import org.koin.android.ext.android.get
+import com.ctrlya.tictactoe.ui.game.GameViewModel
+import com.ctrlya.tictactoe.ui.network.ConnectGameViewModel
+import com.ctrlya.tictactoe.ui.network.NetworkGameViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -18,7 +18,9 @@ class TicTacToeApplication : Application() {
         factory { TicTacToeClient() }
         factory { NetworkGameInteractor(get()) }
 
-        viewModel<GameViewModel>{GameViewModel(get())}
+        viewModel<GameViewModel>{ GameViewModel(get()) }
+        viewModel<ConnectGameViewModel>{ ConnectGameViewModel(get()) }
+        viewModel<NetworkGameViewModel>{ NetworkGameViewModel(get(),get()) }
     }
 
     override fun onCreate() {
