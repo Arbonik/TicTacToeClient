@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.35279400127764327" />
         <entry key="app/src/main/res/layout/connect_game_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/game_fragment.xml" value="0.3277777777777778" />
+        <entry key="app/src/main/res/layout/network_game_fragment.xml" value="0.1" />
       </map>
     </option>
   </component>

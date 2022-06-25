@@ -5,6 +5,7 @@ import com.ctrlya.tictactoe.network.NetworkGameInteractor
 import com.ctrlya.tictactoe.network.TicTacToeClient
 import com.ctrlya.tictactoe.ui.game.GameViewModel
 import com.ctrlya.tictactoe.ui.network.ConnectGameViewModel
+import com.ctrlya.tictactoe.ui.network.NetworkGameViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -19,6 +20,7 @@ class TicTacToeApplication : Application() {
 
         viewModel<GameViewModel>{ GameViewModel(get()) }
         viewModel<ConnectGameViewModel>{ ConnectGameViewModel(get()) }
+        viewModel<NetworkGameViewModel>{ NetworkGameViewModel(get(),get()) }
     }
 
     override fun onCreate() {

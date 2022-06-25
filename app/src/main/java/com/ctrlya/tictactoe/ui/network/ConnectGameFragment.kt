@@ -3,8 +3,11 @@ package com.ctrlya.tictactoe.ui.network
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.ctrlya.tictactoe.R
 import com.ctrlya.tictactoe.databinding.ConnectGameFragmentBinding
 import com.ctrlya.tictactoe.ui.Resource
@@ -68,11 +71,10 @@ class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
                                     it.data.items
                                 )
                             bindind.roomsListView.setOnItemClickListener { parent, view, position, id ->
-//                                findNavController().navigate(
-//                                    GameRoomsFragmentDirections.actionGameRoomsFragmentToNetworkBattleFragment(
-//                                        it.data.items[position].id
-//                                    )
-//                                )
+                                findNavController().navigate(
+                                    R.id.action_connectGameFragment_to_networkGameFragment,
+                                    bundleOf("id" to it.data.items[position].id)
+                                )
                             }
                         } else {
                             bindind.noFreeRoomsHit.visibility = View.VISIBLE
