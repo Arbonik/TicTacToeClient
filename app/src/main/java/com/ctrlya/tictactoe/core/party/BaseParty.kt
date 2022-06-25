@@ -16,6 +16,7 @@ open class BaseParty(settings: BattlefieldSettings) : Battlefield(
     val battlefieldStateFlow: StateFlow<List<List<Mark>>> = _battlefieldStateFlow
 
     private fun isLegalTurn(position: Point): TurnStatus {
+        var pos = Point(position.y, position.x)
         return TurnValidator.validate(position, _marks)
     }
 

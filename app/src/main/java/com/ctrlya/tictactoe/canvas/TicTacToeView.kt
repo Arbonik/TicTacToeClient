@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.MotionEvent
 import com.ctrlya.tictactoe.core.data.Mark
 import io.ktor.util.reflect.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +25,7 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     open val CELL_HEIGHT = 270f
     var f = false
 
+    fun getField() = _field
 
     private fun collect() {
         for (i in _field.indices) {
