@@ -10,6 +10,8 @@ import domain.game.GameStartedStatus
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import java.util.logging.Handler
+import java.util.logging.LogRecord
 
 // TODO need id to game
 open class GameService(
@@ -86,8 +88,17 @@ open class GameService(
     private fun fixedResultGame(position: Point, player: Player) {
         if (judge.isWin(settings.winSequenceLength, position, _marks)) {
             updateProgress(GameEvent.Win(player))
-        }else if (judge.isDraw(_marks)) {
+            cancelScope()
+        } else if (judge.isDraw(_marks)) {
             updateProgress(GameEvent.DRAW)
+            cancelScope()
+        }
+    }
+
+    private fun cancelScope() {
+        coroutineScope.launch {
+            delay(50)
+            coroutineScope.cancel()
         }
     }
 
@@ -104,7 +115,7 @@ open class GameService(
         updateProgress(GameEvent.END)
     }
 
-    private fun updateProgress(gameEvent : GameEvent) {
+    private fun updateProgress(gameEvent: GameEvent) {
         coroutineScope.launch {
             _gameStatusFlow.emit(gameEvent)
         }
