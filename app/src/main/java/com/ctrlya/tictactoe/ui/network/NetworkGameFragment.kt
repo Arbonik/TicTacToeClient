@@ -32,7 +32,7 @@ class NetworkGameFragment : Fragment() {
             view.setField(game.battlefieldStateFlow)
         }
         lifecycleScope.launchWhenCreated {
-            view.connectToGame("a5b662bb-c39f-489e-8b2d-d83ea8245de3", lifecycleScope)
+            view.connectToGame("20a8dc66-c8f0-4664-9b38-8f2684b12726", lifecycleScope)
         }
         return view //inflater.inflate(R.layout.network_game_fragment, container, false)
     }

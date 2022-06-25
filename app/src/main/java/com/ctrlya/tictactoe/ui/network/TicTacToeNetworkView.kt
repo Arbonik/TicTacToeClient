@@ -35,7 +35,7 @@ class NetworkTicTacToeView(context: Context, attributeSet: AttributeSet?) :
     }
 
     fun connectToGame(id:String, coroutineScope: CoroutineScope){
-        val url = URLBuilder(host = "89.223.123.239", port = 8888, pathSegments = listOf(id)).buildString()
+        val url = URLBuilder(protocol = URLProtocol.WS, host = "89.223.123.239", port = 8888, pathSegments = listOf(id)).buildString()
         coroutineScope.launch {
             client.webSocket(url){
                 for (frame in incoming){
