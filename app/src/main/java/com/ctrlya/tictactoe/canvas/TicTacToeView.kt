@@ -24,6 +24,7 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     open val CELL_HEIGHT = 270f
     var f = false
 
+    fun getField() = _field
 
     private fun collect() {
         for (i in _field.indices) {
