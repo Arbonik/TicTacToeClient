@@ -17,7 +17,7 @@ open class GameFragment : Fragment() {
 
     private val viewModel: GameViewModel by viewModel<GameViewModel>()
     val player = RealPlayer(Mark.O, lifecycleScope)
-    val player1 = RealPlayer(Mark.O, lifecycleScope)
+    val player1 = RealPlayer(Mark.X, lifecycleScope)
     val game = GameService(BattlefieldSettings(3,3,3,false), lifecycleScope)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +28,7 @@ open class GameFragment : Fragment() {
         game.setPlayer(
             player,
             player1,
-            player,
+            player1,
         )
         lifecycleScope.launchWhenCreated {
             view.setField(game.battlefieldStateFlow)

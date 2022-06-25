@@ -17,7 +17,8 @@ open class GameService(
 ) : BaseParty(
     settings
 ) {
-    private val _gameStatusFlow: MutableSharedFlow<GameProgress> = MutableStateFlow(GameProgress.CREATED)
+    private val _gameStatusFlow: MutableSharedFlow<GameProgress> =
+        MutableStateFlow(GameProgress.CREATED)
     val gameStatusFlow = _gameStatusFlow.asSharedFlow()
 
     private val judge = Judge()
@@ -35,7 +36,9 @@ open class GameService(
             firstPlayer == null -> GameStartedStatus.NO_FIRST_PLAYER
             secondPlayer == null -> GameStartedStatus.NO_SECOND_PLAYER
             currentPlayer == null -> GameStartedStatus.NO_CURRENT_PLAYERS
-            else -> { GameStartedStatus.SUCCESS }
+            else -> {
+                GameStartedStatus.SUCCESS
+            }
         }
     }
 
@@ -45,8 +48,10 @@ open class GameService(
             firstPlayer = player
             coroutineScope.launch {
                 player.turn().collectLatest { point ->
-                    Log.d("FIELD_UPDATE", "1")
-                    playerTurn(player, point/*, player.mark*/)
+                    if (point.x >= 0 && point.y >= 0 && point.x <= battlefieldStateFlow.value.size - 1 && point.y <= battlefieldStateFlow.value.size - 1) {
+                        Log.d("FIELD_UPDATE", "1")
+                        playerTurn(player, point/*, player.mark*/)
+                    }
                 }
             }
         }
@@ -54,8 +59,11 @@ open class GameService(
             secondPlayer = player
             coroutineScope.launch {
                 player.turn().collectLatest { point ->
-                    Log.d("FIELD_UPDATE", "2")
-                    playerTurn(player, point/*, player.mark*/)
+                    Log.d("AAA", battlefieldStateFlow.value.size.toString())
+                    if (point.x >= 0 && point.y >= 0 && point.x <= battlefieldStateFlow.value.size - 1 && point.y <= battlefieldStateFlow.value.size - 1) {
+                        Log.d("FIELD_UPDATE", "2")
+                        playerTurn(player, point/*, player.mark*/)
+                    }
                 }
             }
         }
@@ -82,7 +90,7 @@ open class GameService(
     private fun fixedResultGame(position: Point, player: Player) {
         if (judge.isWin(settings.winSequenceLength, position, _marks)) {
             updateProgress(GameProgress.Win(player))
-        }else if (judge.isDraw(_marks)) {
+        } else if (judge.isDraw(_marks)) {
             updateProgress(GameProgress.DRAW)
         }
     }
@@ -100,7 +108,7 @@ open class GameService(
         updateProgress(GameProgress.END)
     }
 
-    private fun updateProgress(gameProgress : GameProgress) {
+    private fun updateProgress(gameProgress: GameProgress) {
         coroutineScope.launch {
             _gameStatusFlow.emit(gameProgress)
         }

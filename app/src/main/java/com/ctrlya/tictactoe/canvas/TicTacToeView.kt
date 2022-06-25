@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import com.ctrlya.tictactoe.core.data.Mark
+import io.ktor.util.reflect.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,20 +16,24 @@ import kotlinx.coroutines.launch
 open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     GraphView(context, attributeSet) {
 
-    private var _field: List<List<Mark>> = listOf(listOf(Mark.EMPTY))
+    private var _field: List<List<Mark>> = listOf()
     protected var viewField: MutableList<MutableList<Drawn>> =
-        mutableListOf(mutableListOf(EmptyDrawer()))
+        mutableListOf()
 
     open val CELL_WIDTH = 270f
     open val CELL_HEIGHT = 270f
 
 
     private fun collect() {
-        viewField = mutableListOf()
         for (i in _field.indices) {
-            viewField.add(mutableListOf())
+            if (viewField.size < i + 1)
+                viewField.add(mutableListOf())
             for (j in _field[i].indices) {
-                viewField[i].add(markToDrawn(_field[i][j]))
+                if (viewField[i].size < j + 1) {
+                    viewField[i].add(markToDrawn(_field[i][j]))
+                } else if (viewField[i][j] is EmptyDrawer) {
+                    viewField[i][j] = markToDrawn(_field[i][j])
+                }
             }
         }
         Log.d("FIELD_UPDATE", viewField.toString())
@@ -85,7 +90,7 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = (event.x / scaleFactor - canvasX) / CELL_WIDTH
         val y = (event.y / scaleFactor - canvasY) / CELL_HEIGHT
-        val point = Point(x.toInt(), y.toInt())
+        val point = Point(y.toInt(), x.toInt())
 
         if (event.action == MotionEvent.ACTION_UP) {
             MainScope().launch {
