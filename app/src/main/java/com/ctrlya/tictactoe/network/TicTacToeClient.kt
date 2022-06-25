@@ -1,5 +1,6 @@
 package com.ctrlya.tictactoe.network
 
+import android.util.Log
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.player.NetworkPlayer
@@ -46,6 +47,9 @@ class TicTacToeClient : KtorClient() {
             for (frame in incoming) {
                 if (frame is Frame.Text)
                     messageReceive(frame, networkPlayer)
+                else {
+                    Log.d("AAA", frame.data.toString())
+                }
             }
         }
     }
