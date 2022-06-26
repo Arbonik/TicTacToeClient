@@ -64,7 +64,14 @@
         android:id="@+id/chooseLocalGameFragment"
         android:name="com.ctrlya.tictactoe.ui.menu.ChooseLocalGameFragment"
         android:label="fragment_choose_local_game"
-        tools:layout="@layout/fragment_choose_local_game" />
+        tools:layout="@layout/fragment_choose_local_game" >
+        <action
+            android:id="@+id/action_chooseLocalGameFragment_to_learnFragment"
+            app:destination="@id/learnFragment" />
+        <action
+            android:id="@+id/action_chooseLocalGameFragment_to_botGameFragment"
+            app:destination="@id/botGameFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chooseNetworkGameFragment2"
         android:name="com.ctrlya.tictactoe.ui.menu.ChooseNetworkGameFragment"

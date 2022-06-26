@@ -21,6 +21,7 @@
         <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/fragment_network_game.xml" value="0.1265625" />
         <entry key="app/src/main/res/layout/connect_game_fragment.xml" value="0.15833333333333333" />
+        <entry key="app/src/main/res/layout/fragment_choose_local_game.xml" value="0.19947916666666668" />
         <entry key="app/src/main/res/layout/fragment_learn.xml" value="0.2909604519774011" />
       </map>
     </option>

@@ -11,7 +11,7 @@ import com.ctrlya.tictactoe.ui.game.GameModeItem
 
 
 class GameModeAdapter(
-    var click: (gameMode: GameMode) -> Unit,
+//    var click: () -> Unit,
     var dataSet: Array<GameModeItem> = arrayOf(),
     var isNetwork: Boolean
 )
@@ -47,7 +47,7 @@ class GameModeAdapter(
             binding.subtitle.text = dataSet[position].subtitle
 
             binding.root.setOnClickListener {
-                click(dataSet[position].gameMode)
+                dataSet[position].gameMode()
             }
         }
     }
