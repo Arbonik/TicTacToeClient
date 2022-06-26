@@ -11,11 +11,15 @@ import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.channels.consume
-import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlin.concurrent.fixedRateTimer
 
 class TicTacToeClient : KtorClient() {
     private val HOST = "mysterious-tor-86270.herokuapp.com"
@@ -23,7 +27,14 @@ class TicTacToeClient : KtorClient() {
         URLBuilder(host = HOST, pathSegments = listOf("rooms")).build()
     private val CREATE_ROOM_URL =
         URLBuilder(host = HOST, pathSegments = listOf("createroom")).build()
-    private val BASE_URL_Connect = URLBuilder(host = HOST)
+
+    fun urlToSocket(id: String): String {
+        return URLBuilder(
+            protocol = URLProtocol.WSS,
+            host = HOST,
+            pathSegments = listOf(id)
+        ).buildString()
+    }
 
     suspend fun createRoom(gameSettings: BattlefieldSettings) = on<CreateRoomResponse> {
         client.post(CREATE_ROOM_URL) {
@@ -37,26 +48,16 @@ class TicTacToeClient : KtorClient() {
         client.get(BASE_URL)
     }
 
-    suspend fun connectToGame(id: String, networkPlayer: NetworkPlayer) {
-        client.webSocket(BASE_URL_Connect.appendPathSegments(id).buildString()) {
+    suspend fun connectToGame(id: String, ctrlProtocol: CtrlProtocol, sharedFlow: SharedFlow<String>) {
+        client.webSocket(urlToSocket(id)) {
             launch {
-                networkPlayer.outgoingChannel.consumeEach { event ->
-                    when (event) {
-                        GameEvent.CREATED -> {}
-                        GameEvent.DRAW -> {}
-                        GameEvent.END -> {}
-                        GameEvent.INIT -> {}
-                        is GameEvent.Start -> {}
-                        is GameEvent.Turn -> {
-                            outgoing.send(Frame.Text(sendCtrlProtocol(event.point)))
-                        }
-                        is GameEvent.Win -> {}
-                    }
+                sharedFlow.collectLatest { frame ->
+                    outgoing.send(Frame.Text(frame))
                 }
             }
             for (frame in incoming) {
                 if (frame is Frame.Text)
-                    messageReceive(frame, networkPlayer)
+                    messageReceive(frame, ctrlProtocol)
                 else {
                     Log.d("AAA", frame.data.toString())
                 }

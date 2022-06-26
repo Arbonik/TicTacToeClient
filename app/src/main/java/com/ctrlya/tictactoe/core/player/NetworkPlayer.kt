@@ -7,7 +7,12 @@ import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.network.CtrlProtocol
 import com.ctrlya.tictactoe.network.GameStatus
 import com.ctrlya.tictactoe.network.TicTacToeClient
+import com.ctrlya.tictactoe.network.sendCtrlProtocol
+import io.ktor.websocket.*
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,16 +21,30 @@ class NetworkPlayer(
     override val mark: Mark,
     val id: String,
     val ktorClient: TicTacToeClient,
-) : Player, CtrlProtocol {
+) : Player {
 
-    val outgoingChannel : BroadcastChannel<GameEvent> = BroadcastChannel(1)
-    private val turns : MutableSharedFlow<Point> = MutableSharedFlow()
+    private val socketListener = object : CtrlProtocol {
+        override suspend fun point(point: Point) {
+            turns.emit(point)
+        }
+
+        override suspend fun chat(message: String) {
+
+        }
+
+        override suspend fun event(event: GameStatus) {
+
+        }
+    }
+
+    val outgoingChannel: MutableSharedFlow<String> = MutableSharedFlow()
+    private val turns: MutableSharedFlow<Point> = MutableSharedFlow()
 
     override suspend fun connectToGame(game: GameService) {
-        ktorClient.connectToGame(id, this)
+        ktorClient.connectToGame(id, socketListener, outgoingChannel)
 
-        game.gameStatusFlow.collectLatest { game ->
-            when (game){
+        game.gameStatusFlow.collectLatest { value ->
+            when (value) {
                 GameEvent.CREATED -> {}
                 GameEvent.DRAW -> {
 
@@ -34,7 +53,10 @@ class NetworkPlayer(
                 GameEvent.INIT -> {}
                 is GameEvent.Start -> {}
                 is GameEvent.Turn -> {
-                    turns.emit(game.point)
+                    if (value.player == this){
+                        outgoingChannel.emit(sendCtrlProtocol(value.point))
+                    }
+                    turns.emit(value.point)
                 }
                 is GameEvent.Win -> {
 
@@ -45,16 +67,5 @@ class NetworkPlayer(
     }
 
     override suspend fun turn(): Flow<Point> = turns
-    override suspend fun point(point: Point) {
-        
-    }
-
-    override suspend fun chat(message: String) {
-
-    }
-
-    override suspend fun event(event: GameStatus) {
-
-    }
 
 }
