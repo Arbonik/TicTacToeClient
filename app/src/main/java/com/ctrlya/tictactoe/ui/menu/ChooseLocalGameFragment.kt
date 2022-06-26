@@ -26,6 +26,9 @@ class ChooseLocalGameFragment : Fragment() {
             GameModeItem("БИТВА \nс ХОБОТОМ", "Не на жизнь,\nа вусмерть"){
                 findNavController().navigate(R.id.action_chooseLocalGameFragment_to_botGameFragment)
             },
+            GameModeItem("ИГРА С ДРУГОМ", "На одном телефоне"){
+                findNavController().navigate(R.id.action_chooseLocalGameFragment_to_gameFragment)
+            },
         ),
         false
     )

@@ -14,8 +14,6 @@ import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.core.player.RealPlayer
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
