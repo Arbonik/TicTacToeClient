@@ -21,19 +21,20 @@ class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loadRooms()
+        viewModel.matchMaking()
+//        viewModel.loadRooms()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ConnectGameFragmentBinding.bind(view)
-        roomsCollect()
+//        roomsCollect()
+        matchMakingCollect()
         newRoomCreateListener()
         refreshLayoutListener()
     }
 
     private fun refreshLayoutListener() {
-
         binding.swipeRefrest.setOnRefreshListener {
             viewModel.loadRooms()
         }
@@ -41,16 +42,33 @@ class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
 
     private fun newRoomCreateListener() {
         binding.createRoomsFab.setOnClickListener {
-//            findNavController().navigate(
-//                R.id.action_connectGameFragment_to_createRoomFragment
-//            )
             viewModel.createRoom(BattlefieldSettings(3, 3,3,false)) {
                 viewModel.loadRooms()
             }
         }
-//        findNavController().navigate(
-//            GameRoomsFragmentDirections.actionGameRoomsFragmentToNetworkBattleFragment(it.roomId!!)
-//        )
+    }
+
+    private fun matchMakingCollect() {
+        lifecycleScope.launchWhenCreated {
+            viewModel.roomId.collectLatest {
+                when (it) {
+                    is Resource.Error -> {
+                        binding.progress.visibility = View.GONE
+                    }
+                    is Resource.Loading -> {
+                        binding.progress.visibility = View.VISIBLE
+                    }
+                    is Resource.Success -> {
+                        binding.progress.visibility = View.GONE
+                        val bundle = bundleOf("id" to it.data)
+                        findNavController().navigate(
+                            R.id.action_connectGameFragment_to_networkGameFragment,
+                            bundle
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun roomsCollect() {

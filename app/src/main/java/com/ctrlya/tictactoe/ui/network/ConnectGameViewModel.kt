@@ -22,6 +22,10 @@ class ConnectGameViewModel(
         MutableStateFlow(Resource.Success(RoomsResponse()))
     val rooms: StateFlow<Resource<RoomsResponse>> = _roomsResponse
 
+    private val _roomId: MutableStateFlow<Resource<String>> =
+        MutableStateFlow(Resource.Loading())
+    val roomId: StateFlow<Resource<String>> = _roomId
+
     fun loadRooms() {
         _roomsResponse.value = Resource.Loading()
         viewModelScope.launch {
@@ -33,15 +37,38 @@ class ConnectGameViewModel(
         }
     }
 
-    fun createRoom(gameSettings: BattlefieldSettings, callBack: (room: CreateRoomResponse?) -> Unit) {
+    fun createRoom(
+        gameSettings: BattlefieldSettings,
+        callBack: (room: CreateRoomResponse?) -> Unit
+    ) {
         viewModelScope.launch {
             val result = interactor.createRoom(gameSettings)
             callBack(result)
         }
     }
-    fun ws(id : String, sharedFlow: SharedFlow<Point>, callback : (point:Point) -> Unit) {
+
+    fun matchMaking() {
         viewModelScope.launch {
-            interactor.ws(id,sharedFlow, object : CtrlProtocol {
+            val freeRooms = interactor.freeRooms()
+            if (freeRooms.items.isNullOrEmpty()) {
+                val roomId = interactor.createRoom(BattlefieldSettings(3, 3, 3, false))
+                if (roomId != null) {
+                    _roomId.value = Resource.Success(roomId.roomId)
+                }
+            } else {
+                val elem = freeRooms.items.find { item -> item.id != null }
+                if (elem?.id != null) {
+                    _roomId.value = Resource.Success(elem.id)
+                } else {
+                    _roomId.value = Resource.Error(":C")
+                }
+            }
+        }
+    }
+
+    fun ws(id: String, sharedFlow: SharedFlow<Point>, callback: (point: Point) -> Unit) {
+        viewModelScope.launch {
+            interactor.ws(id, sharedFlow, object : CtrlProtocol {
                 override suspend fun point(point: Point) {
                     Log.d("DQOFNQEFQEF", point.toString())
                     callback(point)

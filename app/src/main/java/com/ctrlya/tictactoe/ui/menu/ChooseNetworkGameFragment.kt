@@ -17,7 +17,11 @@ class ChooseNetworkGameFragment : Fragment() {
     private lateinit var binding: FragmentChooseNetworkGameBinding
     private var adapter = GameModeAdapter(
         arrayOf(
-            GameModeItem("БИТВА\nС ИГРОКОМ", "Играй с друзьями\nили другими игроками"),
+            GameModeItem("БИТВА\nС ИГРОКОМ", "Играй с друзьями\nили другими игроками"){
+                  findNavController().navigate(
+                      R.id.action_chooseNetworkGameFragment2_to_connectGameFragment
+                  )
+            },
             GameModeItem("БИТВА\nХОБОТОВ", "Узнай.\nЧей XOбот круче!"),
         ),
         true

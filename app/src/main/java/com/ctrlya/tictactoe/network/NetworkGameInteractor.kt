@@ -20,6 +20,10 @@ class NetworkGameInteractor(
         val result = ktorClient.allRooms()
         return result.getOrDefault(RoomsResponse())
     }
+    suspend fun freeRooms(): RoomsResponse {
+        val result = ktorClient.freeRooms()
+        return result.getOrDefault(RoomsResponse())
+    }
 
     suspend fun ws (id:String, sharedFlow: SharedFlow<Point>, ctrlProtocol: CtrlProtocol)/*: ctrlProtocol: CtrlProtocol,*/{
         ktorClient.connectToGame(id, sharedFlow).collectLatest {

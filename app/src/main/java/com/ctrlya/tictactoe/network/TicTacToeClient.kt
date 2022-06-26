@@ -3,25 +3,20 @@ package com.ctrlya.tictactoe.network
 import android.util.Log
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
-import com.ctrlya.tictactoe.core.game.GameEvent
-import com.ctrlya.tictactoe.core.player.NetworkPlayer
 import com.ctrlya.tictactoe.network.model.CreateRoomResponse
 import com.ctrlya.tictactoe.network.model.RoomsResponse
-import io.ktor.client.call.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.concurrent.fixedRateTimer
 
 class TicTacToeClient : KtorClient() {
     private val HOST = "mysterious-tor-86270.herokuapp.com"
-    private val BASE_URL =
+    private val All_ROOMS =
         URLBuilder(host = HOST, pathSegments = listOf("rooms")).build()
     private val CREATE_ROOM_URL =
         URLBuilder(host = HOST, pathSegments = listOf("createroom")).build()
@@ -43,7 +38,12 @@ class TicTacToeClient : KtorClient() {
     }
 
     suspend fun allRooms() = on<RoomsResponse> {
-        client.get(BASE_URL)
+        client.get(All_ROOMS)
+    }
+    suspend fun freeRooms() = on<RoomsResponse> {
+        client.get(All_ROOMS){
+            parameter("free",true)
+        }
     }
 
     fun connectToGame(id: String, sharedFlow: SharedFlow<Point>) = flow<Frame.Text> {
