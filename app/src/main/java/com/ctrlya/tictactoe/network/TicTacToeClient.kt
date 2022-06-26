@@ -1,7 +1,7 @@
 package com.ctrlya.tictactoe.network
 
 import android.util.Log
-import com.ctrlya.tictactoe.core.data.Point
+import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.player.NetworkPlayer
 import com.ctrlya.tictactoe.network.model.CreateRoomResponse

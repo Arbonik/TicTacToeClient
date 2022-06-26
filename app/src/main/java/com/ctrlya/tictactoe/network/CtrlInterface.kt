@@ -1,5 +1,6 @@
 package com.ctrlya.tictactoe.network
 
+import com.ctrlya.tictactoe.core.data.Point
 import io.ktor.websocket.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*

@@ -5,7 +5,6 @@ import com.ctrlya.tictactoe.canvas.TicTacToeView
 import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.data.toHash
-import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.database.memory.MemoryInteractor
 import kotlinx.coroutines.CoroutineScope
@@ -30,35 +29,7 @@ class SkilledBotPlayer(
     }
 
     override suspend fun connectToGame(game: GameService) {
-//        game.gameStatusFlow.collectLatest {  event ->
-//            when (event){
-//                is GameEvent.Turn -> {
-//                    if (event.player != this){
-//                        val point = memory.getOrElse(game.battlefieldStateFlow.value.toHash()){
-//                            val field = game.battlefieldStateFlow.value
-//                            val sequence = sequence {
-//                                for (x in field.indices) {
-//                                    for (y in field[x].indices)
-//                                        if (field[y][x] == Mark.EMPTY)
-//                                            yield(Point(y, x))
-//                                }
-//                            }
-//                            val turns = sequence.toList()
-//
-//                            if (turns.isNotEmpty()) {
-//                                val turn = turns.random()
-//                                Log.d("AAA", turn.toString())
-//                                turn
-//                            } else {
-//                                throw Exception()
-//                            }
-//                        }
-//                        Log.d("RESULT_POINT", point.toString())
-//                        mutableSharedFlow.emit(point)
-//                    }
-//                }
-//            }
-//        }
+
     }
 
     suspend fun connectToTouchListener(ticTacToeView: TicTacToeView) {
