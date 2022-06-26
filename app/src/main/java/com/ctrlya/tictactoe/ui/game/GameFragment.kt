@@ -25,7 +25,7 @@ open class GameFragment : Fragment() {
 
     val player = RealPlayer(Mark.X, lifecycleScope)
     val player1 = RealPlayer(Mark.O, lifecycleScope)
-    val game = GameService(BattlefieldSettings(10, 10, 5, false), lifecycleScope)
+    val game = GameService(BattlefieldSettings(11, 11, 5, false), lifecycleScope)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

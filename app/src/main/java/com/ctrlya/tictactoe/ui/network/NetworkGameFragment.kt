@@ -26,7 +26,7 @@ class NetworkGameFragment : Fragment() {
     private val viewModel: ConnectGameViewModel by viewModel<ConnectGameViewModel>()
     private lateinit var binding: NetworkGameFragmentBinding
     val firstPlayer = RealPlayer(Mark.X, lifecycleScope)
-    val game = GameService(BattlefieldSettings(3, 3, 3, false), lifecycleScope)
+    val game = GameService(BattlefieldSettings(11, 11, 5, false), lifecycleScope)
     val networkPlayer = NetworkPlayer(Mark.O)
 
     override fun onCreateView(
