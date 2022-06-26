@@ -25,10 +25,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BotGameFragment : Fragment() {
     val memoryInteractor: MemoryInteractor by inject()
-    private val viewModel: BotGameViewModel by viewModel<BotGameViewModel>()
+    private val viewModel: BotGameViewModel by viewModel()
     val player = RealPlayer(Mark.O, lifecycleScope)
     val player1 = SkilledBotPlayer(Mark.X, memoryInteractor, lifecycleScope)
-    val game = GameService(BattlefieldSettings(3, 3, 3, false), lifecycleScope)
+    val game = GameService(BattlefieldSettings(10, 10, 5, false), lifecycleScope)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,15 +43,15 @@ class BotGameFragment : Fragment() {
             player1,
             player,
         )
-        viewModel.viewModelScope.launch {
+        lifecycleScope.launch {
             val builder = AlertDialog.Builder(requireContext())
             game.gameStatusFlow.collect {
                 when (it) {
                     is GameEvent.Win -> {
                         if (it.winner == player) {
-                            builder.setMessage("Победил бот на крестиках")
+                            builder.setMessage("Вы победили бота!")
                         } else {
-                            builder.setMessage("Победили бот на ноликах")
+                            builder.setMessage("Бот победил!")
                         }
                         builder.create()
                         builder.show()

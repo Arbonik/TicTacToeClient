@@ -45,23 +45,28 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="64sp"
+        android:layout_height="56sp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="48dp"
         android:elevation="2dp"
-        app:cardCornerRadius="4sp"
+        app:cardCornerRadius="6sp"
+        app:cardBackgroundColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:cardElevation="4dp"
+        >
         <EditText
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8sp"
             android:gravity="center"
-            android:hint="Имя" />
+            android:hint="Имя"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@color/black"
+            android:background="@null"/>
     </androidx.cardview.widget.CardView>
 
 
@@ -83,7 +88,7 @@
         android:layout_marginStart="32dp"
         android:textColor="#999999"
         android:padding="4sp"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:text="@string/scip"
         app:layout_constraintBottom_toBottomOf="@+id/continue_button"
         app:layout_constraintStart_toStartOf="parent"
