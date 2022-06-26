@@ -28,7 +28,7 @@ class BotGameFragment : Fragment() {
     private val viewModel: BotGameViewModel by viewModel()
     val player = RealPlayer(Mark.O, lifecycleScope)
     val player1 = SkilledBotPlayer(Mark.X, memoryInteractor, lifecycleScope)
-    val game = GameService(BattlefieldSettings(3, 3, 3, false), lifecycleScope)
+    val game = GameService(BattlefieldSettings(10, 10, 5, false), lifecycleScope)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
