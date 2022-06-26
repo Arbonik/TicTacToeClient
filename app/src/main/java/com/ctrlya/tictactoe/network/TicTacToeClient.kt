@@ -18,30 +18,20 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TicTacToeClient : KtorClient() {
-    private val BASE_URL = URLBuilder(host = "89.223.123.239", port = 8888, pathSegments = listOf("rooms")).build()
-    private val CREATE_ROOM_URL = URLBuilder(host = "89.223.123.239", port = 8888, pathSegments = listOf("rooms/create")).build()
-    private val BASE_URL_Connect = URLBuilder(host = "89.223.123.239", port = 8888)
+    private val HOST = "mysterious-tor-86270.herokuapp.com"
+    private val BASE_URL =
+        URLBuilder(host = HOST, pathSegments = listOf("rooms")).build()
+    private val CREATE_ROOM_URL =
+        URLBuilder(host = HOST, pathSegments = listOf("createroom")).build()
+    private val BASE_URL_Connect = URLBuilder(host = HOST)
 
-    suspend fun createRoom(gameSettings: BattlefieldSettings): CreateRoomResponse? =
-        try {
-            client.post(CREATE_ROOM_URL)
-            {
-                setBody(
-                    Json.encodeToString(gameSettings)
-                )
-            }
-                .body<CreateRoomResponse?>()?.let {
-                    Log.d("NETWORK_REQUEST", "SUCCESS")
-                    it
-                }
-            Log.d("NETWORK_REQUEST", "NULL")
-            null
+    suspend fun createRoom(gameSettings: BattlefieldSettings) = on<CreateRoomResponse> {
+        client.post(CREATE_ROOM_URL) {
+            setBody(
+                Json.encodeToString(gameSettings)
+            )
         }
-        catch (error: Error)
-        {
-            Log.d("NETWORK_REQUEST", error.message.toString())
-            null
-        }
+    }
 
     suspend fun allRooms() = on<RoomsResponse> {
         client.get(BASE_URL)

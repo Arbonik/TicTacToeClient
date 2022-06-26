@@ -2,7 +2,9 @@ package com.ctrlya.tictactoe.ui.network
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.network.NetworkGameInteractor
+import com.ctrlya.tictactoe.network.model.CreateRoomResponse
 import com.ctrlya.tictactoe.network.model.RoomsResponse
 import com.ctrlya.tictactoe.ui.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,12 +30,10 @@ class ConnectGameViewModel(
         }
     }
 
-
-
-//    fun createRoom(callBack: (room: GameRoom) -> Unit) {
-//        viewModelScope.launch {
-//            val result = gameRepository.createRoomGame()
-//            callBack(result)
-//        }
-//    }
+    fun createRoom(gameSettings: BattlefieldSettings, callBack: (room: CreateRoomResponse?) -> Unit) {
+        viewModelScope.launch {
+            val result = interactor.createRoom(gameSettings)
+            callBack(result)
+        }
+    }
 }

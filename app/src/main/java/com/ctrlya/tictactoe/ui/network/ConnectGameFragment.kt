@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ctrlya.tictactoe.R
+import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.databinding.ConnectGameFragmentBinding
 import com.ctrlya.tictactoe.ui.Resource
 import kotlinx.coroutines.flow.collectLatest
@@ -41,17 +42,16 @@ class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
 
     private fun newRoomCreateListener() {
         binding.createRoomsFab.setOnClickListener {
-
-            findNavController().navigate(
-                R.id.action_connectGameFragment_to_createRoomFragment
-            )
-//            viewModel.createRoom {
-//                viewModel.loadRooms()
-//                findNavController().navigate(
-//                    GameRoomsFragmentDirections.actionGameRoomsFragmentToNetworkBattleFragment(it.roomId!!)
-//                )
-//            }
+//            findNavController().navigate(
+//                R.id.action_connectGameFragment_to_createRoomFragment
+//            )
+            viewModel.createRoom(BattlefieldSettings(3, 3,3,false)) {
+                viewModel.loadRooms()
+            }
         }
+//        findNavController().navigate(
+//            GameRoomsFragmentDirections.actionGameRoomsFragmentToNetworkBattleFragment(it.roomId!!)
+//        )
     }
 
     private fun roomsCollect() {
