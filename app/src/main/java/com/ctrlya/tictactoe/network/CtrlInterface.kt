@@ -42,7 +42,7 @@ suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol) {
     }
 }
 
-inline fun<reified T> sendCtrlProtocol(data: T) = Json.encodeToString(buildJsonObject {
+inline fun <reified T> sendCtrlProtocol(data: T) = Json.encodeToString(buildJsonObject {
     put("type", data!!::class.simpleName)
     put("data", Json.encodeToJsonElement<T>(data))
 })

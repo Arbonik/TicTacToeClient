@@ -2,6 +2,7 @@ package com.ctrlya.tictactoe.ui.learn
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.ctrlya.tictactoe.R
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.databinding.FragmentLearnBinding
+import com.ctrlya.tictactoe.network.GameStatus
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,20 +43,32 @@ class LearnFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             learnViewModel.game.gameStatusFlow.collectLatest { value: GameEvent ->
                 when (value) {
-                    GameEvent.CREATED -> {}
-                    GameEvent.DRAW -> {}
+                    GameEvent.CREATED -> {
+                        binding.textMessages.text = "Начинаем?"
+                    }
+                    GameEvent.DRAW -> {
+                        gameFinish(GameStatus.Draw)
+                    }
                     GameEvent.END -> {
+                        gameFinish(GameStatus.Win)
                     }
                     GameEvent.INIT -> {}
-                    is GameEvent.Start -> {}
-                    is GameEvent.Turn -> {}
+                    is GameEvent.Start -> {
+                            binding.textMessages.text = "Начинаем?"
+                    }
+                    is GameEvent.Turn -> {
+                        if (value.player == learnViewModel.game.teatcher) {
+                            binding.textMessages.text = "Ваш ход, гроссмейстер?"
+                        } else {
+                            binding.textMessages.text = "Можно я похожу?"
+                        }
+                    }
                     is GameEvent.Win -> {
-                        AlertDialog.Builder(requireContext())
-                            .setTitle("Поздравляем! Вы выиграли")
-                            .setPositiveButton("Ok") { _, _ ->
-                                restartGame()
-                            }
-                            .show()
+                        if (value.winner == learnViewModel.game.teatcher) {
+                            gameFinish("Спасибо за урок!")
+                        } else {
+                            gameFinish("Ученик превзошел учителя!")
+                        }
                     }
                     is GameEvent.Message -> {
                         binding.textMessages.text = value.message
@@ -63,6 +77,24 @@ class LearnFragment : Fragment() {
             }
         }
         return binding.root
+    }
+
+    private fun gameFinish(gameResult: GameStatus) {
+        val message = when (gameResult) {
+            GameStatus.Win -> "Позвравляем!"
+            GameStatus.Lose -> "Успехов в следующий раз!"
+            GameStatus.Draw -> "Ничья"
+        }
+        gameFinish(message)
+    }
+
+    private fun gameFinish(message: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(message)
+            .setPositiveButton("Ok") { _, _ ->
+                restartGame()
+            }
+            .show()
     }
 
     private fun restartGame() {

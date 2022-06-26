@@ -24,42 +24,13 @@ class LearnBot(
 
     // подписка на события игры
     override suspend fun connectToGame(game: GameService) {
-        coroutineScope.launch {
-            game.gameStatusFlow.collectLatest { event ->
-                when (event) {
-                    is GameEvent.Turn -> {
-                        val array = game.battlefieldStateFlow.value.map {
-                            it.toTypedArray()
-                        }.toTypedArray()
-
-                        if (event.player != this@LearnBot) {
-//                            positionSharedFlow.emit(array)
-//                            if (isFamiliarPosition(game.battlefieldStateFlow.value.toHash())) {
-//                                game.sendMessage("Я знаю этот ход!")
-//                            } else {
-//                                game.sendMessage("Я не знаю этот ход!")
-//                                learn(event.point, array)
-//                            }
-                        }
-                    }
-                    is GameEvent.Start -> {
-                        if (event.firstTurn == this@LearnBot) {
-                            game.sendMessage("Я начинаю!")
-//                            game.turn(turn(event.s))
-                        } else
-                            game.sendMessage("Ваш ход, гроссмейстер")
-                    }
-                }
-            }
-        }
     }
 
     override suspend fun turn(): Flow<Point> = flow {
-//        turn()
         emit(Point())
     }
 
-    private var fastMemory: LinkedHashMap<String, Point> = linkedMapOf("100000000" to Point(1, 1))
+    private var fastMemory: LinkedHashMap<String, Point> = linkedMapOf()
 
     suspend fun fastMemoryUpdate() {
         fastMemory = memoryInteractor.memorySnupshot(HOBOT)
@@ -105,18 +76,5 @@ class LearnBot(
         }
         memoryInteractor.save(HOBOT, listToSave)
         fastMemoryUpdate()
-    }
-
-    private fun randomPointFromEmptyPlaces(field: Array<Array<Mark>>): Point {
-        var turns = mutableListOf<Point>()
-        for (i in field.indices) {
-            for (j in field[i].indices) {
-                if (field[i][j] == Mark.EMPTY) {
-                    turns.add(Point(j, i))
-                }
-            }
-        }
-        val p = turns[Random.nextInt(turns.size)]
-        return p
     }
 }
