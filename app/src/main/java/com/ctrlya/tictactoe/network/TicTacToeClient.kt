@@ -1,6 +1,7 @@
 package com.ctrlya.tictactoe.network
 
 import android.util.Log
+import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.player.NetworkPlayer
@@ -12,10 +13,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.*
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -48,16 +46,19 @@ class TicTacToeClient : KtorClient() {
         client.get(BASE_URL)
     }
 
-    suspend fun connectToGame(id: String, ctrlProtocol: CtrlProtocol, sharedFlow: SharedFlow<String>) {
-        client.webSocket(urlToSocket(id)) {
+    fun connectToGame(id: String, sharedFlow: SharedFlow<Point>) = flow<Frame.Text> {
+        client.webSocket(method = HttpMethod.Get, host = HOST, path = "/$id") {
             launch {
                 sharedFlow.collectLatest { frame ->
-                    outgoing.send(Frame.Text(frame))
+                    outgoing.send(Frame.Text(sendCtrlProtocol(frame)))
                 }
             }
             for (frame in incoming) {
-                if (frame is Frame.Text)
-                    messageReceive(frame, ctrlProtocol)
+                if (frame is Frame.Text) {
+                    emit(frame)
+                    Log.d("DQOFNQEFQEF", frame.readText())
+//                    messageReceive(frame, ctrlProtocol)
+                }
                 else {
                     Log.d("AAA", frame.data.toString())
                 }

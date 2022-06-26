@@ -11,45 +11,56 @@ import com.ctrlya.tictactoe.canvas.TicTacToeView
 import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.game.GameService
+import com.ctrlya.tictactoe.core.player.NetworkPlayer
 import com.ctrlya.tictactoe.core.player.RealPlayer
 import com.ctrlya.tictactoe.databinding.FragmentLearnBinding
 import com.ctrlya.tictactoe.databinding.FragmentNetworkGameBinding
 import com.ctrlya.tictactoe.databinding.NetworkGameFragmentBinding
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NetworkGameFragment : Fragment() {
 
-    private val viewModel: NetworkGameViewModel by viewModel<NetworkGameViewModel>()
+    private val viewModel: ConnectGameViewModel by viewModel<ConnectGameViewModel>()
     private lateinit var binding: NetworkGameFragmentBinding
-    val firstPlayer = RealPlayer(Mark.O, lifecycleScope)
+    val firstPlayer = RealPlayer(Mark.X, lifecycleScope)
     val game = GameService(BattlefieldSettings(3, 3, 3, false), lifecycleScope)
+    val networkPlayer = NetworkPlayer(Mark.O)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = NetworkGameFragmentBinding.inflate(inflater, container, false)
-        val view = binding.tictacktoeview
+        binding.tictacktoeview
+        game.setPlayer(firstPlayer, networkPlayer, firstPlayer)
 
         lifecycleScope.launchWhenCreated {
-            view.setField(game.battlefieldStateFlow)
+            binding.tictacktoeview.setField(game.battlefieldStateFlow)
         }
         lifecycleScope.launchWhenCreated {
             firstPlayer.connectToGame(game)
         }
         lifecycleScope.launchWhenCreated {
-            val id = arguments?.getString("id")
-            if (id != null) {
-                val networkPlayer = viewModel.connectToGame(Mark.X, id)
-                lifecycleScope.launch {
-                    networkPlayer.connectToGame(game)
-                    game.setPlayer(firstPlayer, networkPlayer, firstPlayer)
-                }
-            } else {
-                Toast.makeText(requireContext(), "ID не передан", Toast.LENGTH_LONG).show()
-            }
+            firstPlayer.connectToTouchListener(binding.tictacktoeview)
         }
-        return binding.root //inflater.inflate(R.layout.network_game_fragment, container, false)
+        lifecycleScope.launchWhenCreated {
+            networkPlayer.connectToGame(game)
+        }
+
+        val id = arguments?.getString("id")
+        if (id != null) {
+            lifecycleScope.launchWhenCreated {
+                viewModel.ws(id, networkPlayer.turns.asSharedFlow()){
+                    game.playerTurn(networkPlayer, it)
+                }
+            }
+        } else {
+            Toast.makeText(requireContext(), "ID не передан", Toast.LENGTH_LONG).show()
+        }
+        return binding.root
     }
 }
+

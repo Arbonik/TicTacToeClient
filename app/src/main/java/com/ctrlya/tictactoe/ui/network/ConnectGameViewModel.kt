@@ -1,14 +1,17 @@
 package com.ctrlya.tictactoe.ui.network
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
+import com.ctrlya.tictactoe.network.CtrlProtocol
+import com.ctrlya.tictactoe.network.GameStatus
 import com.ctrlya.tictactoe.network.NetworkGameInteractor
 import com.ctrlya.tictactoe.network.model.CreateRoomResponse
 import com.ctrlya.tictactoe.network.model.RoomsResponse
 import com.ctrlya.tictactoe.ui.Resource
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ConnectGameViewModel(
@@ -34,6 +37,22 @@ class ConnectGameViewModel(
         viewModelScope.launch {
             val result = interactor.createRoom(gameSettings)
             callBack(result)
+        }
+    }
+    fun ws(id : String, sharedFlow: SharedFlow<Point>, callback : (point:Point) -> Unit) {
+        viewModelScope.launch {
+            interactor.ws(id,sharedFlow, object : CtrlProtocol {
+                override suspend fun point(point: Point) {
+                    Log.d("DQOFNQEFQEF", point.toString())
+                    callback(point)
+                }
+
+                override suspend fun chat(message: String) {
+                }
+
+                override suspend fun event(event: GameStatus) {
+                }
+            })
         }
     }
 }

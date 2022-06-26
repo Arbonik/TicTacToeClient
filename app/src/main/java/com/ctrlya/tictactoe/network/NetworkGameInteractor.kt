@@ -1,8 +1,11 @@
 package com.ctrlya.tictactoe.network
 
+import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.network.model.CreateRoomResponse
 import com.ctrlya.tictactoe.network.model.RoomsResponse
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 
 
 class NetworkGameInteractor(
@@ -17,4 +20,11 @@ class NetworkGameInteractor(
         val result = ktorClient.allRooms()
         return result.getOrDefault(RoomsResponse())
     }
+
+    suspend fun ws (id:String, sharedFlow: SharedFlow<Point>, ctrlProtocol: CtrlProtocol)/*: ctrlProtocol: CtrlProtocol,*/{
+        ktorClient.connectToGame(id, sharedFlow).collectLatest {
+           messageReceive(it, ctrlProtocol)
+        }
+    }
+
 }

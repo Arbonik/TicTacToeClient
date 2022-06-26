@@ -74,7 +74,7 @@ open class GameService(
         }
     }
 
-    protected fun playerTurn(player: Player, position: Point, mark : Mark = player.mark) {
+    fun playerTurn(player: Player, position: Point, mark : Mark = player.mark) {
         if (player == currentPlayer) {
             if (turn(position, mark) == TurnStatus.SUCCESS) {
                 updateProgress(GameEvent.Turn(player, position))

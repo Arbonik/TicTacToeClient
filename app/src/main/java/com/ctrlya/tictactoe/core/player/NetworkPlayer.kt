@@ -9,6 +9,8 @@ import com.ctrlya.tictactoe.network.GameStatus
 import com.ctrlya.tictactoe.network.TicTacToeClient
 import com.ctrlya.tictactoe.network.sendCtrlProtocol
 import io.ktor.websocket.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -16,33 +18,15 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class NetworkPlayer(
     override val mark: Mark,
-    val id: String,
-    val ktorClient: TicTacToeClient,
 ) : Player {
-
-    private val socketListener = object : CtrlProtocol {
-        override suspend fun point(point: Point) {
-            turns.emit(point)
-        }
-
-        override suspend fun chat(message: String) {
-
-        }
-
-        override suspend fun event(event: GameStatus) {
-
-        }
-    }
-
     val outgoingChannel: MutableSharedFlow<String> = MutableSharedFlow()
-    private val turns: MutableSharedFlow<Point> = MutableSharedFlow()
+    val turns: MutableSharedFlow<Point> = MutableSharedFlow()
 
     override suspend fun connectToGame(game: GameService) {
-        ktorClient.connectToGame(id, socketListener, outgoingChannel)
-
         game.gameStatusFlow.collectLatest { value ->
             when (value) {
                 GameEvent.CREATED -> {}

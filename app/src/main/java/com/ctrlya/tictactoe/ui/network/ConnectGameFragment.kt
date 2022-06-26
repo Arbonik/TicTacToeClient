@@ -24,8 +24,7 @@ class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
         viewModel.loadRooms()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ConnectGameFragmentBinding.bind(view)
         roomsCollect()
