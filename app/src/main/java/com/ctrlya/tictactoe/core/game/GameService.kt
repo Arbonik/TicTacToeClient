@@ -11,9 +11,6 @@ import domain.game.GameStartedStatus
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-
 
 // TODO need id to game
 open class GameService(
@@ -23,6 +20,7 @@ open class GameService(
     settings
 ) {
     private val _gameStatusFlow: MutableSharedFlow<GameEvent> = MutableStateFlow(GameEvent.CREATED)
+    val _gameWinLine: MutableStateFlow<WinLine?> = MutableStateFlow(null)
     val gameStatusFlow = _gameStatusFlow.asSharedFlow()
 
     private val judge = Judge()
@@ -101,6 +99,11 @@ open class GameService(
             delay(50)
             coroutineScope.cancel()
         }
+    }
+
+    fun searchWinLine(marks: List<List<Mark>>, position: Point) {
+        settings.winSequenceLength
+
     }
 
     protected fun swapCurrentPlayer() {

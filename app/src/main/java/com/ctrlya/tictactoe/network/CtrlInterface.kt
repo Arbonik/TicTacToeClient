@@ -1,19 +1,6 @@
 package com.ctrlya.tictactoe.network
 
-import android.content.Context
-import android.graphics.Canvas
-import android.util.AttributeSet
-import com.ctrlya.tictactoe.canvas.TicTacToeView
-import com.ctrlya.tictactoe.core.data.Point
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.websocket.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 
