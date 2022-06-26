@@ -3,9 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/drawable/ic_back.xml" value="0.19" />
         <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/fragment_acquainted_x_obot.xml" value="0.1" />
-        <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/fragment_acquainted_you.xml" value="0.1" />
+        <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/fragment_acquainted_you.xml" value="0.5375796178343949" />
         <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/fragment_bot_game.xml" value="0.1" />
         <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/fragment_choose_local_game.xml" value="0.1" />
         <entry key="..\:/Users/2007e/AndroidStudioProjects/TicTacToeClient/app/src/main/res/layout/fragment_choose_network_game.xml" value="0.1" />
