@@ -36,7 +36,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:lineHeight="20dp"
-        android:text="Чекаво, \nсыграем? ;)"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
