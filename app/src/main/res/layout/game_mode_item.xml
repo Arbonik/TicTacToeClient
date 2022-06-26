@@ -10,7 +10,8 @@
     android:layout_margin="8sp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:backgroundTint="@color/white">
 
     <ImageView
         android:id="@+id/icon"
