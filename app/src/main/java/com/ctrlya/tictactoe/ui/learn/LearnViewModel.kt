@@ -11,9 +11,9 @@ class LearnViewModel(
 
     val game = LearnService(
         BattlefieldSettings(
-            3,
-            3,
-            3,
+            11,
+            11,
+            5,
             false
         ),
         viewModelScope,
