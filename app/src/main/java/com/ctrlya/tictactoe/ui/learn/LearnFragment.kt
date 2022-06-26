@@ -1,5 +1,6 @@
 package com.ctrlya.tictactoe.ui.learn
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,12 +49,12 @@ class LearnFragment : Fragment() {
                     is GameEvent.Start -> {}
                     is GameEvent.Turn -> {}
                     is GameEvent.Win -> {
-//                        AlertDialog.Builder(requireContext())
-//                            .setTitle("Поздравляем! Вы выиграли")
-//                            .setPositiveButton("Ok") { _, _ ->
-//                                restartGame()
-//                            }
-//                            .show()
+                        AlertDialog.Builder(requireContext())
+                            .setTitle("Поздравляем! Вы выиграли")
+                            .setPositiveButton("Ok") { _, _ ->
+                                restartGame()
+                            }
+                            .show()
                     }
                     is GameEvent.Message -> {
                         binding.textMessages.text = value.message

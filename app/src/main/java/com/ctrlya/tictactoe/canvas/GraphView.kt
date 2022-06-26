@@ -114,14 +114,6 @@ open class GraphView(context: Context, attributeSet: AttributeSet? = null) :
         }
         detector.onTouchEvent(event) // Listen for scale gestures (i.e. pinching or double tap+drag
         // Just some useful coordinate data
-        Log.d(
-            "TOUCHEVENT", "x: $x, y: $y,\ninitY: $initX, initY,\n" +
-                    "canvasX: $canvasX, canvasY: $canvasY,\nwidth: $dispWidth, height: $dispHeight\n" +
-                    "focusX: ${detector.focusX}, focusY: ${detector.focusY}"
-        )
-        // Data pertaining to fingers for responsiveness and stuff
-        Log.d("TOUCHEVENT", "Action: ${event.action and MotionEvent.ACTION_MASK}\n")
-
         return true
     }
 

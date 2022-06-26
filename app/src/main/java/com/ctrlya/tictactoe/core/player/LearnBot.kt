@@ -10,6 +10,7 @@ import com.ctrlya.tictactoe.database.memory.MemoryInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 // делает свои ходы наугад, если не знает позиции
 class LearnBot(
@@ -45,8 +46,7 @@ class LearnBot(
                         if (event.firstTurn == this@LearnBot) {
                             game.sendMessage("Я начинаю!")
 //                            game.turn(turn(event.s))
-                        }
-                        else
+                        } else
                             game.sendMessage("Ваш ход, гроссмейстер")
                     }
                 }
@@ -59,7 +59,7 @@ class LearnBot(
         emit(Point())
     }
 
-    private var fastMemory: LinkedHashMap<String, Point> = linkedMapOf("100000000" to Point(1,1))
+    private var fastMemory: LinkedHashMap<String, Point> = linkedMapOf("100000000" to Point(1, 1))
 
     suspend fun fastMemoryUpdate() {
         fastMemory = memoryInteractor.memorySnupshot(HOBOT)
@@ -70,10 +70,19 @@ class LearnBot(
 
     // ищет ход в памяти, если нет, ходит наугад
     fun turn(field: Array<Array<Mark>>): Point {
-        val hash = field.toHash()
-        return fastMemory.getOrElse(hash) {
-            randomPointFromEmptyPlaces(field)
+        var turns = mutableListOf<Point>()
+        for (i in field.indices) {
+            for (j in field[i].indices) {
+                if (field[i][j] == Mark.EMPTY) {
+                    turns.add(Point(j, i))
+                }
+            }
         }
+        val tryPoint = fastMemory[field.toHash()]
+        var p: Point = tryPoint ?: turns[Random.nextInt(turns.size)]
+        if (turns.contains(tryPoint).not())
+            p = turns[Random.nextInt(turns.size)]
+        return p
     }
 
     // сохранение одной позиции со всех сторон
@@ -99,21 +108,15 @@ class LearnBot(
     }
 
     private fun randomPointFromEmptyPlaces(field: Array<Array<Mark>>): Point {
-        val sequence = sequence {
-            for (x in field.indices) {
-                for (y in field[x].indices)
-                    if (field[y][x] == Mark.EMPTY)
-                        yield(Point(y, x))
+        var turns = mutableListOf<Point>()
+        for (i in field.indices) {
+            for (j in field[i].indices) {
+                if (field[i][j] == Mark.EMPTY) {
+                    turns.add(Point(j, i))
+                }
             }
         }
-        val turns = sequence.toList()
-
-        if (turns.isNotEmpty()) {
-            val turn = turns.random()
-            Log.d("AAA", turn.toString())
-            return turn
-        } else {
-            return Point(5,5)
-        }
+        val p = turns[Random.nextInt(turns.size)]
+        return p
     }
 }

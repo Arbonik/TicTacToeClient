@@ -19,6 +19,7 @@ class LearnService(
     memoryInteractor: MemoryInteractor
 ) : GameService(settings, coroutineScope) {
 
+    private var learnPosition: Array<Array<Mark>> = arrayOf()
     private val randomMarks = listOf(Mark.X, Mark.O).shuffled()
     val teatcher = RealPlayer(randomMarks.last(), coroutineScope)
     override var firstPlayer: Player? = teatcher
@@ -31,13 +32,14 @@ class LearnService(
     fun learnBotTurn() {
         val hash = battlefieldStateFlow.value.toHash()
         Log.d("HASH", hash)
+        val array = battlefieldStateFlow.value.map {
+            it.toTypedArray()
+        }.toTypedArray()
         if (student.isFamiliarPosition(hash)) {
-            val array = battlefieldStateFlow.value.map {
-                it.toTypedArray()
-            }.toTypedArray()
             playerTurn(student, student.turn(array))
         } else {
             sendMessage("Я не знаю, куда ходить :с, подскажи?")
+            learnPosition = array
             saveNextTurn = true
         }
     }
@@ -47,9 +49,7 @@ class LearnService(
             teatcher.turn().collectLatest { point ->
                 playerTurn(currentPlayer!!, point, currentPlayer!!.mark)
                 if (saveNextTurn) {
-                    student.learn(point, battlefieldStateFlow.value.map {
-                        it.toTypedArray()
-                    }.toTypedArray())
+                    student.learn(point, learnPosition)
                     saveNextTurn = false
                 }
                 learnBotTurn()

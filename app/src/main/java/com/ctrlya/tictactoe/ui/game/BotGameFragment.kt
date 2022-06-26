@@ -14,14 +14,17 @@ import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.core.player.BotPlayer
 import com.ctrlya.tictactoe.core.player.RealPlayer
+import com.ctrlya.tictactoe.core.player.SkilledBotPlayer
+import com.ctrlya.tictactoe.database.memory.MemoryInteractor
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BotGameFragment : Fragment() {
-
+    val memoryInteractor : MemoryInteractor by inject()
     private val viewModel: BotGameViewModel by viewModel<BotGameViewModel>()
-    val player = RealPlayer(Mark.X, lifecycleScope)
-    val player1 = BotPlayer(Mark.O, lifecycleScope)
-    val game = GameService(BattlefieldSettings(10, 10, 15, false), lifecycleScope)
+    val player = RealPlayer(Mark.O, lifecycleScope)
+    val player1 = SkilledBotPlayer(Mark.X, memoryInteractor, lifecycleScope)
+    val game = GameService(BattlefieldSettings(3, 3, 3, false), lifecycleScope)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

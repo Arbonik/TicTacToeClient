@@ -28,6 +28,11 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     fun getField() = _field
 
     private fun collect() {
+//        viewField = _field.map { row ->
+//            row.map {
+//                markToDrawn(it)
+//            }
+//        }
         for (i in _field.indices) {
             if (viewField.size < i + 1)
                 viewField.add(mutableListOf())
