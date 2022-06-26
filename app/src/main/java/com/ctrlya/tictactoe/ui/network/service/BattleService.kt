@@ -77,18 +77,18 @@ class BattleService() : Service()
 
     private suspend fun startWebSocket(roomId: String)
     {
-        MainScope().launch(Dispatchers.IO) {
-            Repository.websocketClient().webSocket(
-                method = HttpMethod.Get,
-                host = "",
-                path = roomId
-            )
-            {
-                webSocketSession = this@webSocket
-
-
-            }
-        }
+//        MainScope().launch(Dispatchers.IO) {
+//            Repository.websocketClient().webSocket(
+//                method = HttpMethod.Get,
+//                host = "",
+//                path = roomId
+//            )
+//            {
+//                webSocketSession = this@webSocket
+//
+//
+//            }
+//        }
     }
 
     override fun onBind(intent: Intent): IBinder? {

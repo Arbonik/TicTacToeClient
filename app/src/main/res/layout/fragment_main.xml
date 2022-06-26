@@ -84,8 +84,8 @@
 
     <ImageButton
         android:id="@+id/network_button"
-        android:layout_width="64sp"
-        android:layout_height="64sp"
+        android:layout_width="42sp"
+        android:layout_height="42sp"
         android:background="@drawable/ic_online"
         app:layout_constraintBottom_toBottomOf="@+id/start_game"
         app:layout_constraintEnd_toEndOf="parent"
