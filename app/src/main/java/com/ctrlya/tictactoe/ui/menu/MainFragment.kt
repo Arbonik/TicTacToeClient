@@ -45,7 +45,7 @@ class MainFragment : Fragment()
             )
         }
 
-        binding.settingButton.setOnClickListener {  }
+//        binding.settingButton.setOnClickListener {  }
         return binding.root
     }
 
