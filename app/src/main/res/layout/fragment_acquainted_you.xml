@@ -88,7 +88,7 @@
         android:layout_marginStart="32dp"
         android:textColor="#999999"
         android:padding="4sp"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:text="@string/scip"
         app:layout_constraintBottom_toBottomOf="@+id/continue_button"
         app:layout_constraintStart_toStartOf="parent"
