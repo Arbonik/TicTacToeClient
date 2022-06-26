@@ -9,6 +9,7 @@ import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.database.memory.MemoryInteractor
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.random.Random

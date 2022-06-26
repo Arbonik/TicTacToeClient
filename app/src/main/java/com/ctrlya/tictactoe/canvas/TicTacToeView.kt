@@ -25,6 +25,8 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
     open val CELL_HEIGHT = 270f
     var f = false
 
+    var start = System.currentTimeMillis()
+
     fun getField() = _field
 
     private fun collect() {
@@ -52,6 +54,7 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
         Mark.X -> CrossDrawer()
         Mark.O -> ZeroDrawer()
     }
+
     /*
         подписка на обновляемое поле
      */
@@ -100,17 +103,27 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
         val x = (event.x / scaleFactor - canvasX) / CELL_WIDTH
         val y = (event.y / scaleFactor - canvasY) / CELL_HEIGHT
         val point = Point(y.toInt(), x.toInt())
+
+
         if (event.action == MotionEvent.ACTION_MOVE) {
-            f = true
+            if (start == 0L)
+                start = System.currentTimeMillis()
+            f = false
+
         }
         if (event.action == MotionEvent.ACTION_UP) {
-            if (f) {
-                f = false
-            } else {
-                MainScope().launch {
-                    clicked.emit(point)
+            var end = System.currentTimeMillis()
+            if (end - start < 300 || start == 0L) {
+                Log.d("BBB", (end - start).toString())
+                if (f) {
+                    f = false
+                } else {
+                    MainScope().launch {
+                        clicked.emit(point)
+                    }
                 }
             }
+            start = 0L
         }
 
         return super.onTouchEvent(event)

@@ -1,5 +1,6 @@
 package com.ctrlya.tictactoe.ui.game
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,20 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.ctrlya.tictactoe.R
 import com.ctrlya.tictactoe.canvas.TicTacToeView
 import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
+import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.core.player.BotPlayer
 import com.ctrlya.tictactoe.core.player.RealPlayer
 import com.ctrlya.tictactoe.core.player.SkilledBotPlayer
 import com.ctrlya.tictactoe.database.memory.MemoryInteractor
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BotGameFragment : Fragment() {
-    val memoryInteractor : MemoryInteractor by inject()
+    val memoryInteractor: MemoryInteractor by inject()
     private val viewModel: BotGameViewModel by viewModel<BotGameViewModel>()
     val player = RealPlayer(Mark.O, lifecycleScope)
     val player1 = SkilledBotPlayer(Mark.X, memoryInteractor, lifecycleScope)
@@ -39,6 +43,29 @@ class BotGameFragment : Fragment() {
             player1,
             player,
         )
+        viewModel.viewModelScope.launch {
+            val builder = AlertDialog.Builder(requireContext())
+            game.gameStatusFlow.collect {
+                when (it) {
+                    is GameEvent.Win -> {
+                        if (it.winner == player) {
+                            builder.setMessage("Победил бот на крестиках")
+                        } else {
+                            builder.setMessage("Победили бот на ноликах")
+                        }
+                        builder.create()
+                        builder.show()
+                    }
+                    is GameEvent.DRAW -> {
+                        builder.setTitle("Ничья!")
+                        builder.create()
+                        builder.show()
+                    }
+                }
+            }
+
+        }
+
         lifecycleScope.launchWhenCreated {
             view.setField(game.battlefieldStateFlow)
         }
