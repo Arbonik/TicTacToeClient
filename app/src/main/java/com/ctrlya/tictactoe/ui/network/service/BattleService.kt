@@ -81,7 +81,7 @@ class BattleService() : Service()
             Repository.websocketClient().webSocket(
                 method = HttpMethod.Get,
                 host = "",
-                path = r0oomId
+                path = roomId
             )
             {
                 webSocketSession = this@webSocket
