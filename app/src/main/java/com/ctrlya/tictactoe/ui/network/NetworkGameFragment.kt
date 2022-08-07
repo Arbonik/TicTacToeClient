@@ -1,6 +1,7 @@
 package com.ctrlya.tictactoe.ui.network
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.ctrlya.tictactoe.canvas.TicTacToeView
 import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
+import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.game.GameService
 import com.ctrlya.tictactoe.core.player.NetworkPlayer
 import com.ctrlya.tictactoe.core.player.RealPlayer
@@ -35,7 +37,8 @@ class NetworkGameFragment : Fragment() {
     ): View {
         binding = NetworkGameFragmentBinding.inflate(inflater, container, false)
         binding.tictacktoeview
-        game.setPlayer(firstPlayer, networkPlayer, firstPlayer)
+
+        game.setPlayer(firstPlayer, networkPlayer, networkPlayer)
 
         lifecycleScope.launchWhenCreated {
             binding.tictacktoeview.setField(game.battlefieldStateFlow)
@@ -49,12 +52,34 @@ class NetworkGameFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             networkPlayer.connectToGame(game)
         }
+//        if (game.currentPlayer != firstPlayer) {
+//            val realFirstPlayer = RealPlayer(Mark.X, lifecycleScope)
+//            game.setPlayer(realFirstPlayer, networkPlayer, realFirstPlayer)
+//        }
 
         val id = arguments?.getString("id")
         if (id != null) {
             lifecycleScope.launchWhenCreated {
-                viewModel.ws(id, networkPlayer.turns.asSharedFlow()){
+                viewModel.ws(id, networkPlayer.turns.asSharedFlow(), callback = {
                     game.playerTurn(networkPlayer, it)
+                }){
+                    game.setFirstPlayer(it)
+                    Log.d("CURRENT_MARK", it.toString())
+                    Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+                }
+                game.gameStatusFlow.collect {
+                    when (it) {
+                        is GameEvent.Win -> {
+                            if (it.winner == firstPlayer) {
+                                Toast.makeText(requireContext(), "Победа", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(requireContext(), "Не победа", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        is GameEvent.DRAW -> {
+                            Toast.makeText(requireContext(), "Ничья", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         } else {

@@ -32,6 +32,8 @@ open class GameService(
     open var currentPlayer: Player? = null
         protected set
 
+    private var serverIsFirst = true
+
     fun isCanStarted(): GameStartedStatus {
         return when {
             firstPlayer == null && secondPlayer == null -> GameStartedStatus.NO_PLAYERS
@@ -63,7 +65,24 @@ open class GameService(
                 }
             }
         }
-        current?.let { currentPlayer = it }
+
+        current?.let {  currentPlayer = it }
+//        if (serverIsFirst)
+//            currentPlayer = secondPlayer
+//        else
+//            currentPlayer = firstPlayer
+
+    }
+
+    fun setFirstPlayer(char: Char) {
+        Log.d("CHECK_CHAR", char.toString())
+        if (char == 'x') {
+            setPlayer(firstPlayer, secondPlayer, firstPlayer)
+            serverIsFirst = false
+        } else if (char == 'o') {
+            setPlayer(firstPlayer, secondPlayer, secondPlayer)
+            serverIsFirst = true
+        }
     }
 
     open fun start() {
@@ -74,7 +93,8 @@ open class GameService(
         }
     }
 
-    fun playerTurn(player: Player, position: Point, mark : Mark = player.mark) {
+    fun playerTurn(player: Player, position: Point, mark: Mark = player.mark) {
+        Log.d("AAA", currentPlayer.toString())
         if (player == currentPlayer) {
             if (turn(position, mark) == TurnStatus.SUCCESS) {
                 updateProgress(GameEvent.Turn(player, position))

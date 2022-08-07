@@ -66,7 +66,7 @@ class ConnectGameViewModel(
         }
     }
 
-    fun ws(id: String, sharedFlow: SharedFlow<Point>, callback: (point: Point) -> Unit) {
+    fun ws(id: String, sharedFlow: SharedFlow<Point>, callback: (point: Point) -> Unit, mark: (char : Char) -> Unit) {
         viewModelScope.launch {
             interactor.ws(id, sharedFlow, object : CtrlProtocol {
                 override suspend fun point(point: Point) {
@@ -78,6 +78,13 @@ class ConnectGameViewModel(
                 }
 
                 override suspend fun event(event: GameStatus) {
+                }
+
+                override suspend fun mark(char: Char) {
+
+                    Log.d("ABOBA", char.toString())
+                    mark(char)
+
                 }
             })
         }

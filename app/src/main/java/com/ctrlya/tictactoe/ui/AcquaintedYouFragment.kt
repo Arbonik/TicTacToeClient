@@ -32,7 +32,7 @@ class AcquaintedYouFragment : Fragment()
 
         }
 
-        binding.scip.setOnClickListener {
+        binding.skip.setOnClickListener {
             preference.authUserOnDevice("")
             findNavController().navigateUp()
         }

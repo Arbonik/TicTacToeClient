@@ -9,6 +9,7 @@ interface CtrlProtocol {
     suspend fun point(point: Point)
     suspend fun chat(message: String)
     suspend fun event(event: GameStatus)
+    suspend fun mark(char: Char)
 }
 
 suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol) {
@@ -26,6 +27,9 @@ suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol) {
         }
         GameStatus::class.simpleName -> {
             ctrlProtocol.event(Json.decodeFromJsonElement<GameStatus>(dataJson))
+        }
+        Char::class.simpleName -> {
+            ctrlProtocol.mark(Json.decodeFromJsonElement<Char>(dataJson))
         }
     }
 }

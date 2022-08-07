@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:letterSpacing="0.05"
+        android:fontFamily="@font/raleway_regular"
         android:text="Привет! Как тебя зовут?"
         android:textColor="#1A1A1A"
         android:textSize="24sp"
@@ -41,7 +42,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
-
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -63,7 +63,10 @@
             android:layout_height="match_parent"
             android:layout_margin="8sp"
             android:gravity="center"
+            android:fontFamily="@font/raleway_regular"
             android:hint="Имя"
+            android:inputType="text"
+            android:maxLines="1"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@color/black"
             android:background="@null"/>
@@ -82,11 +85,12 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/scip"
+        android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:textColor="#999999"
+        android:fontFamily="@font/raleway_regular"
         android:padding="4sp"
         android:textSize="16sp"
         android:text="@string/scip"

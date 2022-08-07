@@ -17,8 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
@@ -34,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/raleway_regular"
         android:lineHeight="20dp"
         android:text="Выбери \nрежим игры"
         android:textColor="@color/white"
