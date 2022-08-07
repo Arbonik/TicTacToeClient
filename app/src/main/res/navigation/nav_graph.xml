@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_chooseLocalGameFragment_to_botGameFragment"
             app:destination="@id/botGameFragment" />
+        <action
+            android:id="@+id/action_chooseLocalGameFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
     </fragment>
     <fragment
         android:id="@+id/chooseNetworkGameFragment2"
@@ -98,6 +101,10 @@
             app:destination="@id/mainFragment"
             app:popUpTo="@id/mainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.ctrlya.tictactoe.ui.game.GameFragment"
+        android:label="GameFragment" />
 
 
 </navigation>
