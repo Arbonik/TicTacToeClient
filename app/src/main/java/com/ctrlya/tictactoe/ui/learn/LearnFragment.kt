@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.ctrlya.tictactoe.R
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.databinding.FragmentLearnBinding
+import com.ctrlya.tictactoe.network.GameResult
 import com.ctrlya.tictactoe.network.GameStatus
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,10 +48,10 @@ class LearnFragment : Fragment() {
                         binding.textMessages.text = "Начинаем?"
                     }
                     GameEvent.DRAW -> {
-                        gameFinish(GameStatus.Draw)
+                        gameFinish(GameResult.Draw)
                     }
                     GameEvent.END -> {
-                        gameFinish(GameStatus.Win)
+                        gameFinish(GameResult.Win)
                     }
                     GameEvent.INIT -> {}
                     is GameEvent.Start -> {
@@ -79,11 +80,11 @@ class LearnFragment : Fragment() {
         return binding.root
     }
 
-    private fun gameFinish(gameResult: GameStatus) {
+    private fun gameFinish(gameResult: GameResult) {
         val message = when (gameResult) {
-            GameStatus.Win -> "Позвравляем!"
-            GameStatus.Lose -> "Успехов в следующий раз!"
-            GameStatus.Draw -> "Ничья"
+            GameResult.Win -> "Позвравляем!"
+            GameResult.Lose -> "Успехов в следующий раз!"
+            GameResult.Draw -> "Ничья"
         }
         gameFinish(message)
     }

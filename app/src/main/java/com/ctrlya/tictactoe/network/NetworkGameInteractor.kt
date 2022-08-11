@@ -25,10 +25,9 @@ class NetworkGameInteractor(
         return result.getOrDefault(RoomsResponse())
     }
 
-    suspend fun ws (id:String, sharedFlow: SharedFlow<Point>, ctrlProtocol: CtrlProtocol)/*: ctrlProtocol: CtrlProtocol,*/{
+    suspend fun ws(id:String, sharedFlow: SharedFlow<Point>, ctrlProtocol: CtrlProtocol)/*: ctrlProtocol: CtrlProtocol,*/{
         ktorClient.connectToGame(id, sharedFlow).collectLatest {
-           messageReceive(it, ctrlProtocol)
+            it.messageReceive(ctrlProtocol)
         }
     }
-
 }

@@ -7,33 +7,30 @@ import kotlinx.serialization.json.*
 
 interface CtrlProtocol {
     suspend fun point(point: Point)
-    suspend fun chat(message: String)
-    suspend fun event(event: GameStatus)
-    suspend fun mark(char: Char)
+    suspend fun info(message: String)
+    suspend fun result(event: GameResult)
 }
 
-suspend fun messageReceive(message: Frame.Text, ctrlProtocol: CtrlProtocol) {
-
-    val json = Json.parseToJsonElement(message.readText())
+//метод, обрабатывающий полученное сообщение с помощью ctrProtocol коллбека
+suspend fun Frame.Text.messageReceive(ctrlProtocol: CtrlProtocol) {
+    val json = Json.parseToJsonElement(this.readText())
     val messageTypeString = json.jsonObject["type"].toString().trim('"')
     val dataJson = json.jsonObject["data"]!!
 
     when (messageTypeString) {
         String::class.simpleName -> {
-            ctrlProtocol.chat(Json.decodeFromJsonElement<String>(dataJson))
+            ctrlProtocol.info(Json.decodeFromJsonElement<String>(dataJson))
         }
         Point::class.simpleName -> {
             ctrlProtocol.point(Json.decodeFromJsonElement<Point>(dataJson))
         }
-        GameStatus::class.simpleName -> {
-            ctrlProtocol.event(Json.decodeFromJsonElement<GameStatus>(dataJson))
-        }
-        Char::class.simpleName -> {
-            ctrlProtocol.mark(Json.decodeFromJsonElement<Char>(dataJson))
+        GameResult::class.simpleName -> {
+            ctrlProtocol.result(Json.decodeFromJsonElement<GameResult>(dataJson))
         }
     }
 }
 
+// метод, приводящий сообщение к ctrlprotocol стандарту
 inline fun <reified T> sendCtrlProtocol(data: T) = Json.encodeToString(buildJsonObject {
     put("type", data!!::class.simpleName)
     put("data", Json.encodeToJsonElement<T>(data))
@@ -45,18 +42,24 @@ enum class Choose {
     Scissors
 }
 
-enum class GameStatus {
+enum class GameResult {
     Win,
     Lose,
     Draw
 }
 
-fun status(yourChoose: Choose, enemyChoose: Choose): GameStatus {
-    return when {
-        yourChoose == Choose.Rock && enemyChoose == Choose.Scissors -> GameStatus.Lose
-        yourChoose == Choose.Scissors && enemyChoose == Choose.Rock -> GameStatus.Lose
-        yourChoose == Choose.Paper && enemyChoose == Choose.Scissors -> GameStatus.Lose
-        yourChoose == enemyChoose -> GameStatus.Draw
-        else -> GameStatus.Win
-    }
+
+/**
+Init - значение при создании,
+Created - комната была создана и настроена,
+Started - оба игрока подключились
+InProgress - оба игрока подключились
+finish - игра закончена
+ **/
+enum class GameStatus {
+    Init,
+    Created,
+    Started,
+    Progress,
+    Finish,
 }

@@ -65,6 +65,11 @@ open class TicTacToeView(context: Context, attributeSet: AttributeSet?) :
             invalidate()
         }
     }
+    fun setField(field: List<List<Mark>>) {
+        _field = field
+        collect()
+        invalidate()
+    }
 
     private val p = Paint().apply {
         color = Color.BLACK

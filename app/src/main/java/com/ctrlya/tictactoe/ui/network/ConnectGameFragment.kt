@@ -54,12 +54,16 @@ class ConnectGameFragment : Fragment(R.layout.connect_game_fragment) {
                 when (it) {
                     is Resource.Error -> {
                         binding.progress.visibility = View.GONE
+                        binding.statusTextView.visibility = View.GONE
                     }
                     is Resource.Loading -> {
                         binding.progress.visibility = View.VISIBLE
+                        binding.statusTextView.text = it.data
+                        binding.statusTextView.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
                         binding.progress.visibility = View.GONE
+                        binding.statusTextView.visibility = View.GONE
                         val bundle = bundleOf("id" to it.data)
                         findNavController().navigate(
                             R.id.action_connectGameFragment_to_networkGameFragment,

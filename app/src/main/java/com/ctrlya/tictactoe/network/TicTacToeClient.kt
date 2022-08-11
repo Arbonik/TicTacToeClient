@@ -1,5 +1,6 @@
 package com.ctrlya.tictactoe.network
 
+import android.os.Build
 import android.util.Log
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
@@ -15,7 +16,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TicTacToeClient : KtorClient() {
-    private val HOST = "mysterious-tor-86270.herokuapp.com"
+    private val HOST = "192.168.43.240"//"mysterious-tor-86270.herokuapp.com"
     private val All_ROOMS =
         URLBuilder(host = HOST, pathSegments = listOf("rooms")).build()
     private val CREATE_ROOM_URL =
@@ -47,9 +48,15 @@ class TicTacToeClient : KtorClient() {
     }
 
     fun connectToGame(id: String, sharedFlow: SharedFlow<Point>) = flow<Frame.Text> {
-        client.webSocket(method = HttpMethod.Get, host = HOST, path = "/$id") {
+        client.webSocket(
+            method = HttpMethod.Get,
+            host = HOST,
+            path = "/$id",
+            request = { parameter("userId", Build.ID.toString()) }
+        ) {
             launch {
                 sharedFlow.collectLatest { frame ->
+                    Log.d("SEND_DATA", frame.toString())
                     outgoing.send(Frame.Text(sendCtrlProtocol(frame)))
                 }
             }

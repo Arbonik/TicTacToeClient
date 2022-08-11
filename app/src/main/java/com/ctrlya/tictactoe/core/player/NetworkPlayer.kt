@@ -4,21 +4,10 @@ import com.ctrlya.tictactoe.core.data.Mark
 import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.game.GameEvent
 import com.ctrlya.tictactoe.core.game.GameService
-import com.ctrlya.tictactoe.network.CtrlProtocol
-import com.ctrlya.tictactoe.network.GameStatus
-import com.ctrlya.tictactoe.network.TicTacToeClient
 import com.ctrlya.tictactoe.network.sendCtrlProtocol
-import io.ktor.websocket.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class NetworkPlayer(
     override val mark: Mark,

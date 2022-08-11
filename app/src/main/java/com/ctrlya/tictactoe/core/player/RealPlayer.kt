@@ -21,5 +21,5 @@ class RealPlayer(override val mark: Mark, val playerScope : CoroutineScope) : Pl
 
     }
 
-    override suspend fun turn(): Flow<Point> = mutableSharedFlow.asSharedFlow()
+    override suspend fun turn(): SharedFlow<Point> = mutableSharedFlow.asSharedFlow()
 }
