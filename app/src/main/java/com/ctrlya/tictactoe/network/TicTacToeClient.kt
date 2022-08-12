@@ -6,6 +6,7 @@ import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.network.model.CreateRoomResponse
 import com.ctrlya.tictactoe.network.model.RoomsResponse
+import com.ctrlya.tictactoe.ui.rate.RatingResponse
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -21,6 +22,8 @@ class TicTacToeClient : KtorClient() {
         URLBuilder(host = HOST, pathSegments = listOf("rooms")).build()
     private val CREATE_ROOM_URL =
         URLBuilder(host = HOST, pathSegments = listOf("createroom")).build()
+    private val CREATE_RATING_URL =
+        URLBuilder(host = HOST, pathSegments = listOf("allraiting")).build()
 
     fun urlToSocket(id: String): String {
         return URLBuilder(
@@ -40,6 +43,9 @@ class TicTacToeClient : KtorClient() {
 
     suspend fun allRooms() = on<RoomsResponse> {
         client.get(All_ROOMS)
+    }
+    suspend fun getRating() = on<List<RatingResponse>> {
+        client.get(CREATE_RATING_URL)
     }
     suspend fun freeRooms() = on<RoomsResponse> {
         client.get(All_ROOMS){

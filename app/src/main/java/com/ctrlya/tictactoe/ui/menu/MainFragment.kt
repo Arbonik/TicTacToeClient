@@ -44,6 +44,11 @@ class MainFragment : Fragment()
                 R.id.action_mainFragment_to_chooseNetworkGameFragment
             )
         }
+        binding.ratingButton.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_mainFragment_to_chooseNetworkGameFragment
+            )
+        }
 
         return binding.root
     }

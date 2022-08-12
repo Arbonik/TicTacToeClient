@@ -17,7 +17,7 @@
         android:id="@+id/icon"
         android:layout_marginTop="40sp"
         android:layout_gravity="center_horizontal"
-        tools:src="@drawable/pvp"
+        tools:src="@drawable/ic_xobot_face"
         android:layout_width="90sp"
         android:layout_height="90sp"/>
 

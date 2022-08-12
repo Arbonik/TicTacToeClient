@@ -61,7 +61,8 @@ class ConnectGameViewModel(
         }
     }
 
-    fun matchMaking() {
+    fun matchMaking()
+    {
         viewModelScope.launch {
             _roomId.value = Resource.Loading("Поиск свободной комнаты")
             val freeRooms = interactor.freeRooms()

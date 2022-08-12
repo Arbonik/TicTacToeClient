@@ -51,24 +51,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/start_game"
-        android:layout_width="0sp"
-        android:layout_height="64sp"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="150dp"
-        android:backgroundTint="@color/white"
-        android:letterSpacing="0.08"
-        android:text="ИГРАТЬ"
-        android:textColor="#1A1A1A"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="#C75454"
-        app:strokeWidth="2sp" />
-
     <!--    <ImageButton-->
     <!--        android:id="@+id/setting_button"-->
     <!--        android:layout_width="wrap_content"-->
@@ -81,20 +63,59 @@
 
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/start_game"
+        android:layout_width="0sp"
+        android:layout_height="64sp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/white"
+        android:letterSpacing="0.08"
+        android:text="ИГРАТЬ"
+        android:textColor="#1A1A1A"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/network_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#C75454"
+        app:strokeWidth="2sp" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/network_button"
         android:layout_width="0sp"
         android:layout_height="64sp"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
+        android:layout_marginBottom="24dp"
         android:backgroundTint="@color/white"
         android:letterSpacing="0.08"
         android:text="ИГРАТЬ ПО СЕТИ"
         android:textColor="#1A1A1A"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/rating_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#C75454"
+        app:strokeWidth="2sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/rating_button"
+        android:layout_width="0sp"
+        android:layout_height="56sp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/white"
+        android:letterSpacing="0.08"
+        android:text="рейтинг"
+        android:textColor="#1A1A1A"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_game"
         app:strokeColor="#C75454"
         app:strokeWidth="2sp" />
 

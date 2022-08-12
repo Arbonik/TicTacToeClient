@@ -38,9 +38,9 @@ class GameModeAdapter(
         fun onBind(position: Int)
         {
             if (isNetwork)
-                binding.icon.setBackgroundResource(R.drawable.pvp)
+                binding.icon.setBackgroundResource(R.drawable.PvP)
             else
-                binding.icon.setBackgroundResource(R.drawable.elephant)
+                binding.icon.setBackgroundResource(R.drawable.ic_xobot_face)
 
 
             binding.title.text = dataSet[position].title

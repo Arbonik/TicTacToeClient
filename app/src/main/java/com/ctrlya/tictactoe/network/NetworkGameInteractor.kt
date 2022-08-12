@@ -4,6 +4,7 @@ import com.ctrlya.tictactoe.core.data.Point
 import com.ctrlya.tictactoe.core.domain.BattlefieldSettings
 import com.ctrlya.tictactoe.network.model.CreateRoomResponse
 import com.ctrlya.tictactoe.network.model.RoomsResponse
+import com.ctrlya.tictactoe.ui.rate.RatingResponse
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -23,6 +24,11 @@ class NetworkGameInteractor(
     suspend fun freeRooms(): RoomsResponse {
         val result = ktorClient.freeRooms()
         return result.getOrDefault(RoomsResponse())
+    }
+
+    suspend fun getRating(): List<RatingResponse> {
+        val result = ktorClient.getRating()
+        return result.getOrDefault(listOf())
     }
 
     suspend fun ws(id:String, sharedFlow: SharedFlow<Point>, ctrlProtocol: CtrlProtocol)/*: ctrlProtocol: CtrlProtocol,*/{

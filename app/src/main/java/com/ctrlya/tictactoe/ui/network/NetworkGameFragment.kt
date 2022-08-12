@@ -40,12 +40,12 @@ class NetworkGameFragment : Fragment() {
         }
 
         val id = arguments?.getString("id")
-        if (id != null) {
+        if (id != null)
+        {
+
             lifecycleScope.launchWhenCreated {
                 viewModel.ws(id, player.turn(), callback = {
-                    binding.tictacktoeview.setField(
-                        viewModel.field
-                    )
+                    binding.tictacktoeview.setField(viewModel.field)
                 })
             }
         } else {
